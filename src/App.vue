@@ -9,12 +9,18 @@
       <v-btn
         to="/"
         flat
-      >index</v-btn>
+      >
+        index
+        <mdi-icon right>home</mdi-icon>
+      </v-btn>
 
       <v-btn
         to="/about"
         flat
-      >about</v-btn>
+      >
+        about
+        <mdi-icon right>information</mdi-icon>
+      </v-btn>
 
       <v-spacer></v-spacer>
       <v-btn
