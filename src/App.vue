@@ -1,9 +1,11 @@
 <template>
-  <v-app>
+  <v-app
+    v-scroll="onScroll"
+  >
     <v-navigation-drawer
       v-model="drawer"
       temporary
-      absolute
+      fixed
       overflow
       app
     >
@@ -39,8 +41,10 @@
 
     <v-toolbar
       app
-      class="elevation-0"
-      style="background: transparent;"
+      :class="[toolbarElevationLevel]"
+      :style="{
+        background: toolbarBackground
+      }"
     >
       <v-toolbar-side-icon
         @click.stop="drawer = !drawer"
@@ -60,10 +64,18 @@
         class="pa-0"
       >
         <v-layout>
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/house.jpg"
-            :aspect-ratio="bannerRadio"
-          />
+          <v-carousel
+            hide-delimiters
+            :height="bannerHeight"
+          >
+            <v-carousel-item
+              class="pointer"
+              v-for="(src, i) of items"
+              :key="i"
+              :src="src"
+              @click.stop="test(src)"
+            />
+          </v-carousel>
         </v-layout>
         <v-layout
           align-center
@@ -89,10 +101,32 @@
 export default {
   data: () => ({
     drawer: false,
-    bannerRadio: 16 / 9,
+    bannerHeight: window.innerHeight,
+    items: [
+      'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+      'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+      'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+      'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+    ],
+    offsetTop: 0,
   }),
-  created() {
-    this.bannerRadio = window.innerWidth / (window.innerHeight + 15)
+  computed: {
+    toolbarBackground() {
+      const level = this.offsetTop / 90
+      return `rgba(255, 255, 255, ${level / 10})`
+    },
+    toolbarElevationLevel() {
+      const level = Math.floor(this.offsetTop / 200)
+      return level > 3 ? '' : 'elevation-' + level
+    },
+  },
+  methods: {
+    test(src) {
+      log(src)
+    },
+    onScroll() {
+      this.offsetTop = window.scrollY
+    },
   },
 }
 </script>
