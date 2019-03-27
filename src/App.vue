@@ -1,5 +1,5 @@
 <template>
-  <v-app id="sandbox">
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       temporary
@@ -36,7 +36,12 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar app fixed>
+
+    <v-toolbar
+      app
+      class="elevation-0"
+      style="background: transparent;"
+    >
       <v-toolbar-side-icon
         @click.stop="drawer = !drawer"
       />
@@ -48,15 +53,34 @@
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
-    <v-content>
-      <v-container fluid>
-        <v-layout align-center justify-center>
+
+    <v-content class="pa-0">
+      <v-container
+        fluid
+        class="pa-0"
+      >
+        <v-layout>
+          <v-img
+            src="https://cdn.vuetifyjs.com/images/cards/house.jpg"
+            :aspect-ratio="bannerRadio"
+          />
+        </v-layout>
+        <v-layout
+          align-center
+          justify-center
+          row
+        >
           <router-view/>
         </v-layout>
       </v-container>
     </v-content>
     <v-footer>
-      <span class="px-3">&copy; {{ new Date().getFullYear() }}</span>
+      <v-layout
+        align-center
+        justify-center
+      >
+        <span class="px-3"><strong>nobody</strong></span>
+      </v-layout>
     </v-footer>
   </v-app>
 </template>
@@ -65,6 +89,10 @@
 export default {
   data: () => ({
     drawer: false,
+    bannerRadio: 16 / 9,
   }),
+  created() {
+    this.bannerRadio = window.innerWidth / (window.innerHeight + 15)
+  },
 }
 </script>
