@@ -5,8 +5,8 @@ const utils = {}
 
 export default utils
 
-utils.snackbar = msg => {
-  return new Promise(resolve => {
+utils.snackbar = (msg) => {
+  return new Promise((resolve) => {
     const callback = () => {
       resolve()
     }

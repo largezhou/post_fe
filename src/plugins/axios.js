@@ -9,20 +9,20 @@ let config = {
 const _axios = axios.create(config)
 
 _axios.interceptors.request.use(
-  config => {
+  (config) => {
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   },
 )
 
 _axios.interceptors.response.use(
-  res => {
+  (res) => {
     log(res.config.url, res)
     return res
   },
-  err => {
+  (err) => {
     log('err in axios response', { err })
     const res = err.response
 

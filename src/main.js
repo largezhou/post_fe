@@ -7,6 +7,7 @@ import '@/components'
 import '@/styles/index.scss'
 import '@/libs/globals'
 import utils from '@/libs/utils'
+import '@/mocks'
 
 Vue.config.productionTip = false
 
@@ -18,7 +19,7 @@ Vue.prototype.$snackbar = utils.snackbar
 const app = new Vue({
   router,
   store,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app')
 
 if (process.env.NODE_ENV == 'development') {

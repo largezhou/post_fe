@@ -37,7 +37,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapState({
-      widescreen: state => state.app.widescreen,
+      widescreen: (state) => state.app.widescreen,
     }),
   },
   watch: {

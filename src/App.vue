@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     ...mapState({
-      widescreen: state => state.app.widescreen,
+      widescreen: (state) => state.app.widescreen,
     }),
   },
   methods: {
