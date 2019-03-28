@@ -65,6 +65,7 @@
           <v-carousel
             hide-delimiters
             :height="bannerHeight"
+            class="banner"
           >
             <v-carousel-item
               class="pointer"
@@ -133,6 +134,51 @@ export default {
 /deep/ {
   .v-toolbar {
     transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 1ms;
+  }
+
+  .v-carousel {
+    box-shadow: none;
+  }
+}
+
+.banner {
+  /deep/ {
+    .v-carousel__prev,
+    .v-carousel__next {
+      width: 100px;
+      height: 100%;
+      transform: scaleX(0.7);
+      top: 0;
+
+      .v-btn {
+        height: 100%;
+        width: 100%;
+
+        .v-icon {
+          color: transparent;
+        }
+
+        .v-ripple__container * {
+          background: transparent;
+        }
+      }
+    }
+
+    .v-carousel__prev {
+      left: -52px;
+
+      .v-btn {
+        border-radius: 0 70% 70% 0;
+      }
+    }
+
+    .v-carousel__next {
+      right: -52px;
+
+      .v-btn {
+        border-radius: 70% 0 0 70%;
+      }
+    }
   }
 }
 </style>
