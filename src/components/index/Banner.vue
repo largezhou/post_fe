@@ -4,13 +4,18 @@
     :height="bannerHeight"
     class="banner elevation-0"
   >
-    <v-carousel-item
-      class="pointer"
+    <a
       v-for="(src, i) of items"
       :key="i"
-      :src="src"
-      @click.stop="test(src)"
-    />
+      :href="src"
+      target="_blank"
+    >
+      <v-carousel-item
+        class="pointer"
+        :src="src"
+        :interval="10000"
+      />
+    </a>
   </v-carousel>
 </template>
 
@@ -27,9 +32,6 @@ export default {
     this.getBanners()
   },
   methods: {
-    test(src) {
-      log(src)
-    },
     async getBanners() {
       const { data } = await getBanners()
       this.items = data
