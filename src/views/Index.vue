@@ -52,6 +52,7 @@
 
 <script>
 import Banner from '@/components/index/Banner'
+import { getPosts } from '@/api/posts'
 
 export default {
   components: { Banner },
@@ -65,6 +66,18 @@ export default {
   methods: {
     test(src) {
       log(src)
+    },
+    async getPosts() {
+      const res = await getPosts()
+      log(res)
+    },
+  },
+  watch: {
+    $route: {
+      handler() {
+        this.getPosts()
+      },
+      immediate: true,
     },
   },
 }

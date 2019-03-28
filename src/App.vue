@@ -1,5 +1,7 @@
 <template>
-  <v-app>
+  <v-app
+    v-resize="onResize"
+  >
     <slider-bar/>
 
     <navbar/>
@@ -20,11 +22,28 @@
 <script>
 import Navbar from '@/components/app/Navbar'
 import SliderBar from '@/components/app/SliderBar'
+import { mapState } from 'vuex'
 
 export default {
   components: {
     SliderBar,
     Navbar,
+  },
+  computed: {
+    ...mapState({
+      widescreen: state => state.app.widescreen,
+    }),
+  },
+  methods: {
+    onResize() {
+      const width = window.innerWidth
+
+      // 更新是不是宽屏的状态
+      const widescreen = width >= 600
+      if (widescreen !== this.widescreen) {
+        this.$store.commit('CHANGE_WIDESCREEN', widescreen)
+      }
+    },
   },
 }
 </script>
