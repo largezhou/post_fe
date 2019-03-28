@@ -2,6 +2,7 @@
   <v-carousel
     class="elevation-0"
     :height="widescreen ? 600 : 400"
+    :cycle="false"
   >
     <v-carousel-item
       v-for="(src, i) in images"
