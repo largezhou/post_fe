@@ -42,9 +42,7 @@
     <v-toolbar
       app
       :class="[toolbarElevationLevel]"
-      :style="{
-        background: toolbarBackground
-      }"
+      :style="{ background: toolbarBackground }"
     >
       <v-toolbar-side-icon
         @click.stop="drawer = !drawer"
@@ -113,7 +111,7 @@ export default {
   computed: {
     toolbarBackground() {
       const level = this.offsetTop / 90
-      return `rgba(255, 255, 255, ${level / 10})`
+      return `rgba(250, 250, 250, ${level / 10})`
     },
     toolbarElevationLevel() {
       const level = Math.floor(this.offsetTop / 200)
@@ -130,3 +128,11 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+/deep/ {
+  .v-toolbar {
+    transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 1ms;
+  }
+}
+</style>
