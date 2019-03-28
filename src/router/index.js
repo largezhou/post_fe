@@ -4,10 +4,16 @@ import Index from '@/views/Index'
 
 Vue.use(Router)
 
-const page404Route = {
+const indexPage = {
+  path: '/',
+  name: 'index',
+  component: Index,
+}
+
+const notFoundPage = {
   path: '*',
   name: 'page404',
-  component: () => import(/* webpackChunkName: "404" */ '@/views/errors/404'),
+  component: () => import(/* webpackChunkName: "not-found" */ '@/views/errors/NotFound'),
 }
 
 /**
@@ -16,11 +22,6 @@ const page404Route = {
  * @type {*[]}
  */
 const routes = [
-  {
-    path: '/',
-    name: 'index',
-    component: Index,
-  },
   {
     path: '/about',
     name: 'about',
@@ -35,7 +36,14 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    ...routes,
-    page404Route,
+    indexPage,
+    {
+      path: '',
+      component: () => import(/* webpackChunkName: "layout" */ '@/components/Layout'),
+      children: [
+        ...routes,
+        notFoundPage,
+      ],
+    },
   ],
 })

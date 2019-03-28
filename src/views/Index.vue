@@ -1,47 +1,72 @@
 <template>
-  <v-flex class="content">
+  <v-content class="pa-0">
     <v-container
-      pa-0
       fluid
-      grid-list-md
+      class="pa-0"
     >
-      <v-layout
-        row
-        wrap
-        ma-0
-      >
-        <v-flex
-          px-0
-          py-5
-          v-for="card in cards"
-          :key="card.title"
-          v-bind="{ [`xs${card.flex}`]: true }"
-        >
-          <v-card>
-            <v-img :src="card.src"/>
+      <v-layout>
+        <banner/>
+      </v-layout>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <mdi-icon>heart-outline</mdi-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+      <v-layout
+        align-center
+        justify-center
+        row
+      >
+        <v-flex class="content">
+          <v-container
+            pa-0
+            fluid
+            grid-list-md
+          >
+            <v-layout
+              row
+              wrap
+              ma-0
+            >
+              <v-flex
+                px-0
+                py-5
+                v-for="(src, i) of cards"
+                :key="i"
+                xs12
+              >
+                <v-card>
+                  <v-img :src="src"/>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn icon>
+                      <mdi-icon>heart-outline</mdi-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </v-container>
         </v-flex>
       </v-layout>
     </v-container>
-  </v-flex>
+  </v-content>
 </template>
 
 <script>
+import Banner from '@/components/index/Banner'
+
 export default {
+  components: { Banner },
   data: () => ({
     cards: [
-      { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
-      { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 12 },
-      { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 12 },
+      'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+      'https://cdn.vuetifyjs.com/images/cards/road.jpg',
+      'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
     ],
   }),
+  methods: {
+    test(src) {
+      log(src)
+    },
+  },
 }
 </script>
 
