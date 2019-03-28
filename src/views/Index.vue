@@ -27,15 +27,35 @@
               <v-flex
                 px-0
                 py-5
-                v-for="(src, i) of posts"
+                v-for="(p, i) of posts"
                 :key="i"
                 xs12
               >
                 <v-card>
-                  <v-img :src="src"/>
+
+                  <v-img
+                    v-if="p.images.length === 1"
+                    :src="p.images[0]"
+                  />
+                  <post-carousel
+                    v-else-if="p.layout === 'carousel'"
+                    :images="p.images"
+                  />
+                  <post-nine-grid
+                    v-else
+                    :images="p.images"
+                  />
+
+                  <v-card-text class="headline">{{ p.content }}</v-card-text>
 
                   <v-card-actions>
-                    <v-spacer></v-spacer>
+                    <v-card-text class="py-0 px-2">
+                      <human-time
+                        prefix="发布于 "
+                        :time="p.created_at"
+                      />
+                    </v-card-text>
+                    <v-spacer/>
                     <v-btn icon>
                       <mdi-icon>heart-outline</mdi-icon>
                     </v-btn>
@@ -53,9 +73,12 @@
 <script>
 import Banner from '@/components/index/Banner'
 import { getPosts } from '@/api/posts'
+import PostCarousel from '@/components/index/PostCarousel'
+import PostNineGrid from '@/components/index/PostNineGrid'
+import HumanTime from '@/components/HumanTime'
 
 export default {
-  components: { Banner },
+  components: { HumanTime, PostNineGrid, PostCarousel, Banner },
   data: () => ({
     posts: [],
   }),
@@ -65,7 +88,8 @@ export default {
     },
     async getPosts() {
       const { data } = await getPosts()
-      this.posts = data
+      this.posts = data.data
+      log(this.posts)
     },
   },
   watch: {

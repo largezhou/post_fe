@@ -2,7 +2,7 @@
   <v-carousel
     hide-delimiters
     :height="bannerHeight"
-    class="banner"
+    class="banner elevation-0"
   >
     <v-carousel-item
       class="pointer"
@@ -40,8 +40,6 @@ export default {
 
 <style scoped lang="scss">
 .banner {
-  box-shadow: none;
-
   /deep/ {
     .v-carousel__prev,
     .v-carousel__next {
