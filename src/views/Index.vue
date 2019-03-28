@@ -27,7 +27,7 @@
               <v-flex
                 px-0
                 py-5
-                v-for="(src, i) of cards"
+                v-for="(src, i) of posts"
                 :key="i"
                 xs12
               >
@@ -57,19 +57,15 @@ import { getPosts } from '@/api/posts'
 export default {
   components: { Banner },
   data: () => ({
-    cards: [
-      'https://cdn.vuetifyjs.com/images/cards/house.jpg',
-      'https://cdn.vuetifyjs.com/images/cards/road.jpg',
-      'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
-    ],
+    posts: [],
   }),
   methods: {
     test(src) {
       log(src)
     },
     async getPosts() {
-      const res = await getPosts()
-      log(res)
+      const { data } = await getPosts()
+      this.posts = data
     },
   },
   watch: {

@@ -15,19 +15,24 @@
 </template>
 
 <script>
+import { getBanners } from '@/api/banners'
+
 export default {
   name: 'Banner',
   data: () => ({
     bannerHeight: window.innerHeight,
-    items: [
-      'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-      'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-      'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-    ],
+    items: [],
   }),
+  created() {
+    this.getBanners()
+  },
   methods: {
     test(src) {
       log(src)
+    },
+    async getBanners() {
+      const { data } = await getBanners()
+      this.items = data
     },
   },
 }
