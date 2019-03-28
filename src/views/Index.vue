@@ -2,7 +2,7 @@
   <v-content class="pa-0">
     <v-container
       fluid
-      class="pa-0"
+      pa-0
     >
       <v-layout>
         <banner/>
