@@ -18,6 +18,7 @@
         <v-img
           :src="src"
           aspect-ratio="1"
+          @click="onPreviewImage(i)"
         />
       </v-flex>
     </v-layout>
@@ -25,10 +26,10 @@
 </template>
 
 <script>
+import BasePost from './BasePost'
+
 export default {
   name: 'PostNineGrid',
-  props: {
-    images: Array,
-  },
+  extends: BasePost,
 }
 </script>

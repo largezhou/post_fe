@@ -8,18 +8,18 @@
       v-for="(src, i) in images"
       :key="i"
       :src="src"
+      @click.stop="onPreviewImage(i)"
     />
   </v-carousel>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import BasePost from './BasePost'
 
 export default {
   name: 'PostCarousel',
-  props: {
-    images: Array,
-  },
+  extends: BasePost,
   computed: {
     ...mapState({
       widescreen: (state) => state.app.widescreen,
