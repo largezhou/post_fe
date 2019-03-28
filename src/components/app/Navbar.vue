@@ -1,5 +1,11 @@
 <template>
-  <component :is="toolbarComponent">
+  <v-toolbar
+    v-scroll="onScroll"
+    class="navbar"
+    app
+    :class="[elevationLevel]"
+    :style="{ background }"
+  >
     <v-toolbar-side-icon
       @click.stop="$store.commit('TOGGLE_SLIDER_BAR')"
     />
@@ -10,23 +16,46 @@
         </v-toolbar-title>
       </v-btn>
     </v-toolbar-items>
-  </component>
+  </v-toolbar>
 </template>
 
 <script>
-import IndexToolbar from './IndexToolbar'
-import OtherToolbar from './OtherToolbar'
-
 export default {
   name: 'Navbar',
-  components: {
-    IndexToolbar,
-    OtherToolbar,
-  },
+  data: () => ({
+    offsetTop: 0,
+  }),
   computed: {
-    toolbarComponent() {
-      return this.$route.name == 'index' ? 'index-toolbar' : 'other-toolbar'
+    isIndex() {
+      return this.$route.name === 'index'
+    },
+    background() {
+      if (!this.isIndex) {
+        return null
+      }
+
+      const level = this.offsetTop / 90
+      return `rgba(250, 250, 250, ${(level / 10).toFixed(2)})`
+    },
+    elevationLevel() {
+      if (!this.isIndex) {
+        return null
+      }
+
+      const level = Math.floor(this.offsetTop / 200)
+      return level > 3 ? '' : 'elevation-' + level
+    },
+  },
+  methods: {
+    onScroll() {
+      this.offsetTop = window.scrollY
     },
   },
 }
 </script>
+
+<style scoped lang="scss">
+.navbar {
+  transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 1ms;
+}
+</style>
