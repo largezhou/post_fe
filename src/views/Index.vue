@@ -33,18 +33,7 @@
               >
                 <v-card>
 
-                  <v-img
-                    v-if="p.images.length === 1"
-                    :src="p.images[0]"
-                  />
-                  <post-carousel
-                    v-else-if="p.layout === 'carousel'"
-                    :images="p.images"
-                  />
-                  <post-nine-grid
-                    v-else
-                    :images="p.images"
-                  />
+                  <post-image :post="p"/>
 
                   <v-card-text class="headline">{{ p.content }}</v-card-text>
 
@@ -68,46 +57,33 @@
       </v-layout>
     </v-container>
 
-    <v-dialog
-      v-model="dialog"
-      hide-overlay
-      class="lalalala"
-    >
-      <v-card>
-        <v-carousel
-          class="elevation-0"
-          :cycle="false"
-        >
-          <v-carousel-item
-            v-for="(src, i) of (posts[0] ? posts[0].images : [])"
-            :key="i"
-            :src="src"
-          />
-        </v-carousel>
-      </v-card>
-    </v-dialog>
+    <preview-dialog/>
+
   </v-content>
 </template>
 
 <script>
 import Banner from '@/components/index/Banner'
 import { getPosts } from '@/api/posts'
-import PostCarousel from '@/components/index/PostCarousel'
-import PostNineGrid from '@/components/index/PostNineGrid'
 import HumanTime from '@/components/HumanTime'
+import PostImage from '@/components/index/PostImage'
+import PreviewDialog from '@/components/index/PreviewDialog'
 
 export default {
-  components: { HumanTime, PostNineGrid, PostCarousel, Banner },
+  components: {
+    PreviewDialog,
+    PostImage,
+    HumanTime,
+    Banner,
+  },
   data: () => ({
     posts: [],
-    dialog: true,
     height: window.innerHeight,
   }),
   methods: {
     async getPosts() {
       const { data } = await getPosts()
       this.posts = data.data
-      log(this.posts)
     },
   },
   watch: {
@@ -124,15 +100,5 @@ export default {
 <style scoped lang="scss">
 .content {
   max-width: 600px;
-}
-
-.v-dialog__content--active {
-  background: black;
-}
-
-/deep/ {
-  .v-dialog {
-    margin: 0;
-  }
 }
 </style>
