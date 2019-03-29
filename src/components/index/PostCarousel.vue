@@ -5,7 +5,7 @@
     :cycle="false"
   >
     <v-carousel-item
-      v-for="(src, i) in images"
+      v-for="(src, i) of images"
       :key="i"
       :src="src"
       @click.stop="onPreviewImage(i)"

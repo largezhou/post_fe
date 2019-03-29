@@ -9,7 +9,7 @@
       wrap
     >
       <v-flex
-        v-for="(src, i) in images"
+        v-for="(src, i) of images"
         :key="i"
         :xs6="images.length === 4"
         :xs4="images.length !== 4"

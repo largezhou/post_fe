@@ -67,6 +67,25 @@
         </v-flex>
       </v-layout>
     </v-container>
+
+    <v-dialog
+      v-model="dialog"
+      hide-overlay
+      class="lalalala"
+    >
+      <v-card>
+        <v-carousel
+          class="elevation-0"
+          :cycle="false"
+        >
+          <v-carousel-item
+            v-for="(src, i) of (posts[0] ? posts[0].images : [])"
+            :key="i"
+            :src="src"
+          />
+        </v-carousel>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -81,11 +100,10 @@ export default {
   components: { HumanTime, PostNineGrid, PostCarousel, Banner },
   data: () => ({
     posts: [],
+    dialog: true,
+    height: window.innerHeight,
   }),
   methods: {
-    test(src) {
-      log(src)
-    },
     async getPosts() {
       const { data } = await getPosts()
       this.posts = data.data
@@ -106,5 +124,15 @@ export default {
 <style scoped lang="scss">
 .content {
   max-width: 600px;
+}
+
+.v-dialog__content--active {
+  background: black;
+}
+
+/deep/ {
+  .v-dialog {
+    margin: 0;
+  }
 }
 </style>
