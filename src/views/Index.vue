@@ -33,7 +33,10 @@
               >
                 <v-card>
 
-                  <post-image :post="p"/>
+                  <post-image
+                    v-if="p.images.length > 0"
+                    :post="p"
+                  />
 
                   <v-card-text class="headline">{{ p.content }}</v-card-text>
 
