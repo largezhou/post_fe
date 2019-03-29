@@ -27,19 +27,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-/deep/ {
-  .v-carousel__controls {
-    .v-btn {
-      width: 25px;
-      height: 25px;
-      margin: 0 !important;
-    }
-
-    .v-icon {
-      font-size: 16px !important;
-    }
-  }
-}
-</style>

@@ -1,0 +1,18 @@
+/*
+这里用来修改一些 vuetify 中默认的样式
+ */
+
+/*
+轮播图指示器，改小一点
+ */
+.v-carousel__controls {
+  .v-btn {
+    width: 25px;
+    height: 25px;
+    margin: 0 !important;
+  }
+
+  .v-icon {
+    font-size: 16px !important;
+  }
+}
