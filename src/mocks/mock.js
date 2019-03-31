@@ -23,7 +23,7 @@ const resolve = (path) => {
 
 export default (path, method, template = {}, callback) => {
   Mock.mock(resolve(path), method, (options) => {
-    if (typeof callback == 'function') {
+    if (typeof callback === 'function') {
       callback(template, options)
     }
 

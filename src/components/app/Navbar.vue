@@ -11,9 +11,11 @@
     />
     <v-toolbar-items>
       <v-btn flat to="/" active-class="no-class">
-        <v-toolbar-title>
-          <mdi-icon>home</mdi-icon>
-        </v-toolbar-title>
+        <img
+          height="30"
+          width="30"
+          src="@/assets/logo.png"
+        />
       </v-btn>
     </v-toolbar-items>
   </v-toolbar>
