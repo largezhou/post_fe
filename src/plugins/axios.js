@@ -1,5 +1,6 @@
 import axios from 'axios'
 import utils from '@/libs/utils'
+import store from '@/store'
 
 let config = {
   baseURL: process.env.VUE_APP_BASE_URL || '/',
@@ -32,12 +33,11 @@ _axios.interceptors.response.use(
           utils.snackbar('请求的网址的不存在')
           break
         case 401:
-          // store.dispatch('frontendLogout')
-          // store.commit('changeEditMode', false)
-          // utils.snackbar('已登出')
+          store.dispatch('frontendLogout')
+          utils.snackbar('登录已失效')
           break
         default:
-          utils.snackbar(`服务器错误(code: ${res.status})`)
+          utils.snackbar(`服务器错误 (code: ${res.status})`)
       }
     } else {
       utils.snackbar('请求错误')

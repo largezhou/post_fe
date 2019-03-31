@@ -16,6 +16,20 @@ const notFoundPage = {
   component: () => import(/* webpackChunkName: "not-found" */ '@/views/errors/NotFound'),
 }
 
+// 登录
+const login = {
+  path: '/login',
+  name: 'login',
+  component: () => import(/* webpackChunkName: "login" */ '@/views/Login'),
+}
+
+// 任何路径后面加一个/login，即可跳转到登录页
+const loginEverywhere = {
+  path: '*/login',
+  name: 'loginEverywhere',
+  component: () => import(/* webpackChunkName: "login" */ '@/views/Login'),
+}
+
 /**
  * 普通路由全部放这里
  *
@@ -30,6 +44,14 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '@/views/About'),
   },
+  {
+    path: '/admin',
+    name: 'adminIndex',
+    meta: {
+      auth: true,
+    },
+    component: () => import(/* webpackChunkName: "admin-index" */ '@/views/admin/Index'),
+  },
 ]
 
 export default new Router({
@@ -41,7 +63,9 @@ export default new Router({
       path: '',
       component: () => import(/* webpackChunkName: "layout" */ '@/components/Layout'),
       children: [
+        login,
         ...routes,
+        loginEverywhere,
         notFoundPage,
       ],
     },

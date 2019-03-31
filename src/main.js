@@ -2,6 +2,7 @@ import Vue from 'vue'
 import './plugins/vuetify'
 import App from './App.vue'
 import router from '@/router'
+import '@/router/permission'
 import store from '@/store'
 import '@/components'
 import '@/styles/index.scss'
@@ -16,7 +17,9 @@ Vue.config.productionTip = false
  */
 Vue.prototype.$snackbar = utils.snackbar
 
-Vue.prototype.$bus = new Vue()
+const bus = new Vue()
+Vue.prototype.$bus = bus
+Vue.$bus = bus
 
 const app = new Vue({
   router,

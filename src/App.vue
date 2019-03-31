@@ -16,6 +16,8 @@
         <span class="px-3"><strong>nobody</strong></span>
       </v-layout>
     </v-footer>
+
+    <login-dialog/>
   </v-app>
 </template>
 
@@ -23,9 +25,11 @@
 import Navbar from '@/components/app/Navbar'
 import SliderBar from '@/components/app/SliderBar'
 import { mapState } from 'vuex'
+import LoginDialog from '@/components/app/LoginDialog'
 
 export default {
   components: {
+    LoginDialog,
     SliderBar,
     Navbar,
   },

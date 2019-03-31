@@ -22,6 +22,20 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
+    <template v-if="loggedIn">
+      <v-divider/>
+      <v-list-tile
+        active-class=""
+        @click="onLogout"
+      >
+        <v-list-tile-action>
+          <mdi-icon>exit-to-app</mdi-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>退出</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </template>
   </v-navigation-drawer>
 </template>
 
@@ -47,16 +61,37 @@ export default {
         icon: 'flask-empty',
         title: 'Page not found',
       },
+      {
+        to: '/admin',
+        icon: 'flask-empty',
+        title: 'Admin',
+      },
     ],
   }),
   computed: {
     ...mapState({
       sliderBar: (state) => state.app.sliderBar,
+      username: (state) => state.user.name,
     }),
+    loggedIn() {
+      return !!this.username
+    },
   },
   methods: {
     onSliderBarChange(val) {
       this.$store.commit('CHANGE_SLIDER_BAR', val)
+    },
+    async onLogout() {
+      try {
+        await this.$store.dispatch('logout')
+        this.$snackbar('已退出')
+        this.close()
+      } catch (e) {
+
+      }
+    },
+    close() {
+      this.$store.commit('CHANGE_SLIDER_BAR', false)
     },
   },
 }
