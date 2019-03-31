@@ -18,6 +18,8 @@
     </v-footer>
 
     <login-dialog/>
+
+    <floating-actions/>
   </v-app>
 </template>
 
@@ -26,9 +28,11 @@ import Navbar from '@/components/app/Navbar'
 import SliderBar from '@/components/app/SliderBar'
 import { mapState } from 'vuex'
 import LoginDialog from '@/components/app/LoginDialog'
+import FloatingActions from '@/components/FloatingActions'
 
 export default {
   components: {
+    FloatingActions,
     LoginDialog,
     SliderBar,
     Navbar,
