@@ -2,6 +2,7 @@ export default {
   state: {
     sliderBar: false,
     widescreen: true,
+    mobile: navigator.userAgent.indexOf('Mobile') !== -1,
   },
   mutations: {
     CHANGE_SLIDER_BAR(state, status) {

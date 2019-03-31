@@ -1,7 +1,7 @@
 <template>
   <v-scale-transition>
     <v-speed-dial
-      v-show="topBtnShown"
+      v-show="show"
       v-scroll="onScroll"
       v-model="open"
       fixed
@@ -48,7 +48,7 @@ export default {
   data: () => ({
     open: false,
     oldY: 0,
-    topBtnShown: true,
+    show: true,
   }),
   mounted() {
     this.oldY = window.scrollY
@@ -59,7 +59,7 @@ export default {
     },
     onScroll() {
       const scrollYNow = window.scrollY
-      this.topBtnShown = scrollYNow < this.oldY
+      this.show = scrollYNow < this.oldY
 
       this.oldY = scrollYNow
     },
