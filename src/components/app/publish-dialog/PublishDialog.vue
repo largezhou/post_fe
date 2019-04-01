@@ -135,21 +135,21 @@ export default {
       'LAYOUT_CAROUSEL',
       'LAYOUT_NINE_GRID',
     ]),
-    maxImagesCount() {
+    MAX_IMAGES_COUNT() {
       return MAX_IMAGES_COUNT
     },
     maxed() {
-      return this.maxImagesCount === this.form.images.length
+      return this.MAX_IMAGES_COUNT === this.form.images.length
     },
     canPreviewLayout() {
       return this.previewLayout && this.form.images.length > 0
     },
   },
   created() {
-    this.$bus.$on('let-us-publish', this.onLetUsPublish)
+    this.$bus.$on('let-me-publish', this.onLetMePublish)
   },
   beforeDestroy() {
-    this.$bus.$off('let-us-publish', this.onLetUsPublish)
+    this.$bus.$off('let-me-publish', this.onLetMePublish)
   },
   methods: {
     onReset() {
@@ -169,7 +169,7 @@ export default {
     },
     onFileSelect(e) {
       let files = Array.from(e.target.files)
-      files = files.slice(0, this.maxImagesCount - this.form.images.length)
+      files = files.slice(0, this.MAX_IMAGES_COUNT - this.form.images.length)
       files.forEach((f) => {
         f.src = URL.createObjectURL(f)
       })
@@ -179,7 +179,7 @@ export default {
     onClear(index) {
       this.form.images.splice(index, 1)
     },
-    onLetUsPublish() {
+    onLetMePublish() {
       this.dialog = true
     },
   },

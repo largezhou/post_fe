@@ -59,13 +59,13 @@ export default {
     loggedInCallback: null,
   }),
   created() {
-    this.$bus.$on('let-us-login', this.onLetUsLogin)
+    this.$bus.$on('let-me-login', this.onLetMeLogin)
   },
   beforeDestroy() {
-    this.$bus.$off('let-us-login', this.onLetUsLogin)
+    this.$bus.$off('let-me-login', this.onLetMeLogin)
   },
   methods: {
-    onLetUsLogin(loggedInCallback = null) {
+    onLetMeLogin(loggedInCallback = null) {
       this.loggedInCallback = loggedInCallback
       this.dialog = true
     },

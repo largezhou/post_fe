@@ -6,7 +6,7 @@ import Vue from 'vue'
 
 const guestPage = 'index'
 const letUsLogin = () => {
-  Vue.$bus.$emit('let-us-login', () => {
+  Vue.$bus.$emit('let-me-login', () => {
     store.dispatch('getInfo')
   })
 }

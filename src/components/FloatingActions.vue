@@ -31,7 +31,7 @@
           fab
           dark
           color="red"
-          @click="$bus.$emit('let-us-publish')"
+          @click="$bus.$emit('let-me-publish')"
         >
           <mdi-icon>plus</mdi-icon>
         </v-btn>
