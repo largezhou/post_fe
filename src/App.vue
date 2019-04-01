@@ -20,6 +20,8 @@
     <login-dialog/>
 
     <floating-actions v-if="!mobile"/>
+
+    <publish-dialog/>
   </v-app>
 </template>
 
@@ -29,9 +31,11 @@ import SliderBar from '@/components/app/SliderBar'
 import { mapState } from 'vuex'
 import LoginDialog from '@/components/app/LoginDialog'
 import FloatingActions from '@/components/FloatingActions'
+import PublishDialog from '@/components/app/PublishDialog'
 
 export default {
   components: {
+    PublishDialog,
     FloatingActions,
     LoginDialog,
     SliderBar,
