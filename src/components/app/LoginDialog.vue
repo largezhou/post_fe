@@ -35,12 +35,10 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="blue darken-1"
           flat
           @click="dialog = false"
         >取消</v-btn>
         <v-btn
-          color="blue darken-1"
           flat
           @click="onLogin"
         >登录</v-btn>
@@ -58,6 +56,7 @@ export default {
       username: '',
       password: '',
     },
+    loggedInCallback: null,
   }),
   created() {
     this.$bus.$on('let-us-login', this.onLetUsLogin)
@@ -66,7 +65,8 @@ export default {
     this.$bus.$off('let-us-login', this.onLetUsLogin)
   },
   methods: {
-    onLetUsLogin() {
+    onLetUsLogin(loggedInCallback = null) {
+      this.loggedInCallback = loggedInCallback
       this.dialog = true
     },
     async onLogin() {
@@ -74,6 +74,10 @@ export default {
         await this.$store.dispatch('login', this.form)
         this.$snackbar('登录咯')
         this.dialog = false
+
+        if (typeof this.loggedInCallback === 'function') {
+          this.loggedInCallback()
+        }
       } catch (e) {
 
       }

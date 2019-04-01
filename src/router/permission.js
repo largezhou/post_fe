@@ -5,6 +5,11 @@ import utils from '@/libs/utils'
 import Vue from 'vue'
 
 const guestPage = 'index'
+const letUsLogin = () => {
+  Vue.$bus.$emit('let-us-login', () => {
+    store.dispatch('getInfo')
+  })
+}
 
 router.beforeEach((to, from, next) => {
   const needAuth = utils.needAuth(to)
@@ -36,7 +41,7 @@ router.beforeEach((to, from, next) => {
             //   否则直接过
             if (res && res.status === 401) {
               if (needAuth) {
-                Vue.$bus.$emit('let-us-login')
+                letUsLogin()
                 next(false)
               } else {
                 next()
@@ -47,7 +52,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (needAuth) {
-      Vue.$bus.$emit('let-us-login')
+      letUsLogin()
       next(false)
     } else {
       next()
