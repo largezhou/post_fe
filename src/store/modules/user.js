@@ -9,6 +9,12 @@ export default {
     name: '',
   },
 
+  getters: {
+    loggedIn(state) {
+      return !!state.name
+    },
+  },
+
   mutations: {
     SET_TOKEN(state, token) {
       state.token = token

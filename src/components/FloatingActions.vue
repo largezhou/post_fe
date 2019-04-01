@@ -1,55 +1,60 @@
 <template>
-  <v-scale-transition>
-    <v-speed-dial
-      v-show="show"
-      v-scroll="onScroll"
-      v-model="open"
-      fixed
-      bottom
-      right
-      direction="top"
-      transition="slide-y-reverse-transition"
+  <div
+    v-scroll="onScroll"
+    class="floating-actions"
+  >
+    <v-layout
+      column
+      align-center
     >
-      <template v-slot:activator>
-        <v-btn
-          v-model="open"
-          color="blue darken-2"
-          dark
-          fab
+      <v-scale-transition>
+        <v-flex
+          v-show="showTopBtn && oldY"
+          xs12
         >
-          <mdi-icon>gesture-tap</mdi-icon>
-          <mdi-icon>close</mdi-icon>
+          <v-btn
+            fab
+            dark
+            small
+            color="red"
+            @click="onGotoTop"
+          >
+            <mdi-icon>arrow-collapse-up</mdi-icon>
+          </v-btn>
+        </v-flex>
+      </v-scale-transition>
+      <v-flex
+        v-if="loggedIn"
+        xs12
+      >
+        <v-btn
+          fab
+          dark
+          color="red"
+        >
+          <mdi-icon>plus</mdi-icon>
         </v-btn>
-      </template>
-      <v-btn
-        fab
-        dark
-        small
-        color="red"
-      >
-        <mdi-icon>plus</mdi-icon>
-      </v-btn>
-      <v-btn
-        fab
-        dark
-        small
-        color="green"
-        @click="onGotoTop"
-      >
-        <mdi-icon>arrow-collapse-up</mdi-icon>
-      </v-btn>
-    </v-speed-dial>
-  </v-scale-transition>
+      </v-flex>
+    </v-layout>
+  </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'FloatingActions',
   data: () => ({
     open: false,
     oldY: 0,
-    show: true,
+    showTopBtn: true,
+    hideOverY: 500,
   }),
+  computed: {
+    ...mapGetters([
+      'loggedIn',
+    ]),
+  },
   mounted() {
     this.oldY = window.scrollY
   },
@@ -59,10 +64,18 @@ export default {
     },
     onScroll() {
       const scrollYNow = window.scrollY
-      this.show = scrollYNow < this.oldY
+      this.showTopBtn = (scrollYNow > this.hideOverY) && (scrollYNow < this.oldY)
 
       this.oldY = scrollYNow
     },
   },
 }
 </script>
+
+<style scoped lang="scss">
+.floating-actions {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+</style>
