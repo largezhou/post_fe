@@ -9,6 +9,7 @@ import '@/styles/index.scss'
 import '@/libs/globals'
 import utils from '@/libs/utils'
 import '@/mocks'
+import '@/libs/constants'
 
 Vue.config.productionTip = false
 

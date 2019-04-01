@@ -9,3 +9,11 @@
 .h100 {
   height: 100% !important;
 }
+
+.pick-switch {
+  .v-input--switch__thumb,
+  .v-input--switch__track {
+    color: #82b1ff !important;
+    caret-color: #82b1ff !important;
+  }
+}

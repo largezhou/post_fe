@@ -31,7 +31,7 @@ import SliderBar from '@/components/app/SliderBar'
 import { mapState } from 'vuex'
 import LoginDialog from '@/components/app/LoginDialog'
 import FloatingActions from '@/components/FloatingActions'
-import PublishDialog from '@/components/app/PublishDialog'
+import PublishDialog from '@/components/app/publish-dialog/PublishDialog'
 
 export default {
   components: {
