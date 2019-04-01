@@ -5,9 +5,6 @@
     max-width="565px"
     :fullscreen="mobile"
   >
-    <template v-slot:activator="{ on }">
-      <v-btn color="primary" dark v-on="on" fixed top right style="top: 100px;">Open Dialog</v-btn>
-    </template>
     <v-card>
       <v-toolbar
         card
@@ -122,7 +119,7 @@ export default {
     PdImage,
   },
   data: () => ({
-    dialog: true,
+    dialog: false,
     form: {
       content: '',
       images: [],
@@ -147,6 +144,12 @@ export default {
     canPreviewLayout() {
       return this.previewLayout && this.form.images.length > 0
     },
+  },
+  created() {
+    this.$bus.$on('let-us-publish', this.onLetUsPublish)
+  },
+  beforeDestroy() {
+    this.$bus.$off('let-us-publish', this.onLetUsPublish)
   },
   methods: {
     onReset() {
@@ -175,6 +178,9 @@ export default {
     },
     onClear(index) {
       this.form.images.splice(index, 1)
+    },
+    onLetUsPublish() {
+      this.dialog = true
     },
   },
 }
