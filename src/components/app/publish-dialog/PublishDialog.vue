@@ -20,7 +20,10 @@
           </v-btn>
           <v-spacer/>
           <v-toolbar-items>
-            <v-btn flat>
+            <v-btn
+              flat
+              @click="onPublish"
+            >
               <span class="icon-publish"/>
             </v-btn>
           </v-toolbar-items>
@@ -114,6 +117,7 @@ import PdImage from '@/components/app/publish-dialog/PdImage'
 import { LAYOUT_NINE_GRID, mapConstants } from '@/libs/constants'
 import PdPreviewLayout from '@/components/app/publish-dialog/PdPreviewLayout'
 import PdImageEdit from '@/components/app/publish-dialog/PdImageEdit'
+import { storePost } from '@/api/posts'
 
 const MAX_IMAGES_COUNT = 9
 
@@ -189,8 +193,31 @@ export default {
     onClear(index) {
       this.form.images.splice(index, 1)
     },
+    /**
+     * 打开弹框
+     */
     onLetMePublish() {
       this.dialog = true
+    },
+    /**
+     * 请求发布
+     */
+    async onPublish() {
+      const form = this.form
+
+      const fd = new FormData()
+      fd.append('content', form.content)
+      fd.append('layout', form.layout)
+
+      // FormData 的值，只能是 string 或者 Blob
+      // 所以 images 对象数组，使用这种方式
+      form.images.forEach((img, i) => {
+        fd.append(`images[${i}]`, img.file)
+        fd.append(`naked[${i}]`, img.naked)
+      })
+
+      const { data } = await storePost(fd)
+      log(data)
     },
   },
 }

@@ -6,3 +6,11 @@ export function getPosts() {
     method: 'get',
   })
 }
+
+export function storePost(data) {
+  return axios({
+    url: 'posts',
+    method: 'post',
+    data,
+  })
+}

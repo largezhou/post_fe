@@ -6,3 +6,7 @@ mock('/posts', 'get', {
     'data|10': [postTmpl],
   },
 })
+
+mock('/posts', 'post', {
+  data: postTmpl,
+})
