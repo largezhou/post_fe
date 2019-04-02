@@ -9,7 +9,7 @@
       <v-card>
         <v-toolbar
           card
-          color="grey lighten-5"
+          color="white"
         >
           <v-btn
             icon
@@ -50,6 +50,7 @@
                     </v-flex>
                     <v-flex xs6>
                       <v-switch
+                        :disabled="this.form.images.length === 0"
                         class="pick-switch"
                         v-model="previewLayout"
                         :label="previewLayout ? '排版预览' : '编辑中...'"
@@ -225,8 +226,8 @@ export default {
 /deep/ {
   .clear {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: 2px;
+    right: 2px;
     z-index: 2;
     width: 26px;
     height: 26px;
