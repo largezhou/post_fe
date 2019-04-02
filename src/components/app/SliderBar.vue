@@ -2,7 +2,6 @@
   <v-navigation-drawer
     temporary
     fixed
-    overflow
     app
     :value="sliderBar"
     @input="onSliderBarChange"
@@ -82,10 +81,11 @@ export default {
       this.$store.commit('CHANGE_SLIDER_BAR', val)
     },
     async onLogout() {
+      this.close()
+
       try {
         await this.$store.dispatch('logout')
         this.$snackbar('已退出')
-        this.close()
       } catch (e) {
 
       }
