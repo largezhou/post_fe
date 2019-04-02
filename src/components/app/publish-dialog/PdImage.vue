@@ -7,11 +7,11 @@
 
     <v-scale-transition>
       <v-btn
+        class="clear"
         dark
         fab
         color="pink"
-        @click="$emit('clear')"
-        class="clear"
+        @click.stop="$emit('clear')"
       >
         <mdi-icon>close</mdi-icon>
       </v-btn>

@@ -1,104 +1,110 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    persistent
-    max-width="565px"
-    :fullscreen="mobile"
-  >
-    <v-card>
-      <v-toolbar
-        card
-        color="grey lighten-5"
-      >
-        <v-btn
-          icon
-          @click="onCancel"
+  <div class="publish-dialog">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="565px"
+      :fullscreen="mobile"
+    >
+      <v-card>
+        <v-toolbar
+          card
           color="grey lighten-5"
         >
-          <mdi-icon>close</mdi-icon>
-        </v-btn>
-        <v-spacer/>
-        <v-toolbar-items>
-          <v-btn flat>
-            <span class="icon-publish"/>
+          <v-btn
+            icon
+            @click="onCancel"
+            color="grey lighten-5"
+          >
+            <mdi-icon>close</mdi-icon>
           </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-card-text>
-        <v-form ref="form">
-          <v-container grid-list-xs>
-            <v-layout wrap>
-              <v-flex xs12>
-                <v-textarea
-                  v-model="form.content"
-                  name="content"
-                  label="说点啥呢，，，"
-                  no-resize
-                />
-              </v-flex>
-              <v-flex xs12>
-                <v-layout>
-                  <v-flex xs6>
-                    <v-switch
-                      class="pick-switch"
-                      v-model="form.layout"
-                      :true-value="LAYOUT_CAROUSEL"
-                      :false-value="LAYOUT_NINE_GRID"
-                      :label="form.layout === LAYOUT_NINE_GRID ? '九宫' : '轮播'"
-                    />
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-switch
-                      class="pick-switch"
-                      v-model="previewLayout"
-                      :label="previewLayout ? '排版预览' : '编辑中...'"
-                    />
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-
-              <pd-preview-layout
-                :images="form.images"
-                :layout="form.layout"
-                v-show="canPreviewLayout"
-              />
-
-              <v-flex
-                v-show="!canPreviewLayout"
-                xs12
-              >
-                <v-layout wrap>
-                  <pd-image
-                    v-for="(img, i) of form.images"
-                    :src="img.src"
-                    :key="img.src"
-                    @clear="onClear(i)"
+          <v-spacer/>
+          <v-toolbar-items>
+            <v-btn flat>
+              <span class="icon-publish"/>
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-card-text>
+          <v-form ref="form">
+            <v-container grid-list-xs>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-textarea
+                    v-model="form.content"
+                    name="content"
+                    label="说点啥呢，，，"
+                    no-resize
                   />
-                  <v-flex
-                    v-show="!maxed"
-                    class="file-picker-wrap"
-                    @click="onClickPicker"
-                    :disabled="maxed"
-                  >
-                    <mdi-icon class="picker-icon">plus</mdi-icon>
-                    <input
-                      ref="fileInput"
-                      hidden
-                      type="file"
-                      readonly
-                      accept=".png, .jpg, .jpeg, .gif, .bmp"
-                      multiple
-                      @change="onFileSelect"
+                </v-flex>
+                <v-flex xs12>
+                  <v-layout>
+                    <v-flex xs6>
+                      <v-switch
+                        class="pick-switch"
+                        v-model="form.layout"
+                        :true-value="LAYOUT_CAROUSEL"
+                        :false-value="LAYOUT_NINE_GRID"
+                        :label="form.layout === LAYOUT_NINE_GRID ? '九宫' : '轮播'"
+                      />
+                    </v-flex>
+                    <v-flex xs6>
+                      <v-switch
+                        class="pick-switch"
+                        v-model="previewLayout"
+                        :label="previewLayout ? '排版预览' : '编辑中...'"
+                      />
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+
+                <pd-preview-layout
+                  :images="form.images"
+                  :layout="form.layout"
+                  v-show="canPreviewLayout"
+                />
+
+                <v-flex
+                  v-show="!canPreviewLayout"
+                  xs12
+                >
+                  <v-layout wrap>
+                    <pd-image
+                      v-for="(img, i) of form.images"
+                      :src="img.src"
+                      :key="img.src"
+                      @clear="onClear(i)"
+                      class="pointer"
+                      @click.native="$bus.$emit('image-edit', img)"
                     />
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-form>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+                    <v-flex
+                      v-show="!maxed"
+                      class="file-picker-wrap"
+                      @click="onClickPicker"
+                      :disabled="maxed"
+                    >
+                      <mdi-icon class="picker-icon">plus</mdi-icon>
+                      <input
+                        ref="fileInput"
+                        hidden
+                        type="file"
+                        readonly
+                        accept=".png, .jpg, .jpeg, .gif, .bmp"
+                        multiple
+                        @change="onFileSelect"
+                      />
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <pd-image-edit/>
+  </div>
 </template>
 
 <script>
@@ -106,12 +112,14 @@ import { mapState } from 'vuex'
 import PdImage from '@/components/app/publish-dialog/PdImage'
 import { LAYOUT_NINE_GRID, mapConstants } from '@/libs/constants'
 import PdPreviewLayout from '@/components/app/publish-dialog/PdPreviewLayout'
+import PdImageEdit from '@/components/app/publish-dialog/PdImageEdit'
 
 const MAX_IMAGES_COUNT = 9
 
 export default {
   name: 'PublishDialog',
   components: {
+    PdImageEdit,
     PdPreviewLayout,
     PdImage,
   },
@@ -165,11 +173,15 @@ export default {
       this.$refs.fileInput.click()
     },
     onFileSelect(e) {
-      let files = Array.from(e.target.files)
-      files = files.slice(0, this.MAX_IMAGES_COUNT - this.form.images.length)
-      files.forEach((f) => {
-        f.src = URL.createObjectURL(f)
-      })
+      const files = Array.from(e.target.files)
+        .slice(0, this.MAX_IMAGES_COUNT - this.form.images.length)
+        .map((f) => {
+          return {
+            file: f,
+            src: URL.createObjectURL(f),
+            naked: false,
+          }
+        })
       this.form.images.push(...files)
       e.target.value = ''
     },
