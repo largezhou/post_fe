@@ -7,7 +7,7 @@
       column
       align-center
     >
-      <v-scale-transition>
+      <v-scale-transition v-if="!mobile">
         <v-flex
           v-show="showTopBtn && oldY"
           xs12
@@ -33,7 +33,7 @@
           color="red"
           @click="$bus.$emit('let-me-publish')"
         >
-          <mdi-icon>plus</mdi-icon>
+          <span class="icon-publish"/>
         </v-btn>
       </v-flex>
     </v-layout>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'FloatingActions',
@@ -52,6 +52,9 @@ export default {
     hideOverY: 500,
   }),
   computed: {
+    ...mapState({
+      mobile: (state) => state.app.mobile,
+    }),
     ...mapGetters([
       'loggedIn',
     ]),
@@ -78,5 +81,6 @@ export default {
   position: fixed;
   right: 10px;
   bottom: 10px;
+  z-index: 1;
 }
 </style>

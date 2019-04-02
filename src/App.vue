@@ -19,7 +19,7 @@
 
     <login-dialog/>
 
-    <floating-actions v-if="!mobile"/>
+    <floating-actions/>
 
     <publish-dialog/>
   </v-app>
@@ -44,7 +44,6 @@ export default {
   computed: {
     ...mapState({
       widescreen: (state) => state.app.widescreen,
-      mobile: (state) => state.app.mobile,
     }),
   },
   methods: {

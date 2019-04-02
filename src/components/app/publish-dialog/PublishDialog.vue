@@ -19,10 +19,7 @@
         </v-btn>
         <v-spacer/>
         <v-toolbar-items>
-          <v-btn
-            flat
-            style="font-size: 24px;"
-          >
+          <v-btn flat>
             <span class="icon-publish"/>
           </v-btn>
         </v-toolbar-items>
