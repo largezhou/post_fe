@@ -1,11 +1,8 @@
 <template>
   <v-flex xs12>
-    <!--之所以用 v-for 这样，是懒得处理在 images 为空数组时，images[0].src 报错的问题-->
     <v-img
-      v-for="(img, i) of images.slice(0, 1)"
-      v-show="single"
-      :key="i"
-      :src="img.src"
+      v-if="single"
+      :src="images[0].src"
     />
     <v-carousel
       style="max-width: 500px;"
@@ -66,13 +63,13 @@ export default {
       'LAYOUT_NINE_GRID',
     ]),
     single() {
-      return this.images.length <= 1
+      return this.images.length === 1
     },
     carousel() {
-      return this.layout === this.LAYOUT_CAROUSEL && !this.single
+      return this.layout === this.LAYOUT_CAROUSEL && this.images.length > 1
     },
     nineGrid() {
-      return this.layout === this.LAYOUT_NINE_GRID && !this.single
+      return this.layout === this.LAYOUT_NINE_GRID && this.images.length > 1
     },
   },
 }
