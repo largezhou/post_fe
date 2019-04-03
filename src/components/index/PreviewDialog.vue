@@ -29,6 +29,19 @@
         </v-layout>
       </v-carousel-item>
     </v-carousel>
+
+    <v-btn
+      class="clear"
+      dark
+      fab
+      absolute
+      right
+      small
+      color="pink"
+      @click="dialog = false"
+    >
+      <mdi-icon>close</mdi-icon>
+    </v-btn>
   </v-dialog>
 </template>
 
@@ -96,5 +109,9 @@ export default {
       max-width: 100%;
     }
   }
+}
+
+.clear {
+  top: 16px;
 }
 </style>
