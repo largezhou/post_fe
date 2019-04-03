@@ -13,7 +13,7 @@
         >
           <v-btn
             icon
-            @click="onCancel"
+            @click="onClose"
             color="grey lighten-5"
           >
             <mdi-icon>close</mdi-icon>
@@ -164,6 +164,8 @@ export default {
     },
   },
   created() {
+    // 备份初始 form 数据，用来重置表单
+    this.formBak = JSON.stringify(this.form)
     this.$bus.$on('let-me-publish', this.onLetMePublish)
   },
   beforeDestroy() {
@@ -171,10 +173,10 @@ export default {
   },
   methods: {
     onReset() {
-      this.$refs.form.reset()
-      this.form.images = []
+      this.form = JSON.parse(this.formBak)
+      this.previewLayout = false
     },
-    onCancel() {
+    onClose() {
       this.dialog = false
       this.onReset()
     },
@@ -196,6 +198,7 @@ export default {
           }
         })
       this.form.images.push(...files)
+      // 清除文件 input 的值，这样就可以重复选择同一张图片
       e.target.value = ''
     },
     onClear(index) {
@@ -225,7 +228,8 @@ export default {
       })
 
       const { data } = await storePost(fd)
-      log(data)
+      this.$bus.$emit('new-post', data)
+      this.onClose()
     },
   },
 }

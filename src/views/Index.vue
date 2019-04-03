@@ -83,10 +83,19 @@ export default {
     posts: [],
     height: window.innerHeight,
   }),
+  created() {
+    this.$bus.$on('new-post', this.onNewPost)
+  },
+  beforeDestroy() {
+    this.$bus.$off('new-post', this.onNewPost)
+  },
   methods: {
     async getPosts() {
       const { data } = await getPosts()
       this.posts = data.data
+    },
+    onNewPost(data) {
+      this.posts.unshift(data)
     },
   },
   watch: {
