@@ -7370,6 +7370,11 @@ sockjs@0.3.19:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
 
+sortablejs@^1.8.4:
+  version "1.8.4"
+  resolved "http://registry.npm.taobao.org/sortablejs/download/sortablejs-1.8.4.tgz#1bbfeafa96d399b83f28e25d8e49d4fbfd867f30"
+  integrity sha1-G7/q+pbTmbg/KOJdjknU+/2GfzA=
+
 source-list-map@^2.0.0:
   version "2.0.1"
   resolved "http://registry.npm.taobao.org/source-list-map/download/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
@@ -8313,6 +8318,13 @@ vue@^2.6.6:
   version "2.6.10"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha1-pysaQqTYKnIepDjRtr9V5mGVxjc=
+
+vuedraggable@^2.20.0:
+  version "2.20.0"
+  resolved "http://registry.npm.taobao.org/vuedraggable/download/vuedraggable-2.20.0.tgz#82eac1f9a32c116ef4cf5215fe18dfb152afa9dd"
+  integrity sha1-gurB+aMsEW70z1IV/hjfsVKvqd0=
+  dependencies:
+    sortablejs "^1.8.4"
 
 vuetify-loader@^1.0.5:
   version "1.2.1"

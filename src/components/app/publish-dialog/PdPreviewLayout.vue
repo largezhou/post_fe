@@ -2,9 +2,9 @@
   <v-flex xs12>
     <!--之所以用 v-for 这样，是懒得处理在 images 为空数组时，images[0].src 报错的问题-->
     <v-img
-      v-for="img of images.slice(0, 1)"
+      v-for="(img, i) of images.slice(0, 1)"
       v-show="single"
-      :key="img.src"
+      :key="i"
       :src="img.src"
     />
     <v-carousel
@@ -15,8 +15,8 @@
       :cycle="false"
     >
       <v-carousel-item
-        v-for="img of images"
-        :key="img.src"
+        v-for="(img, i) of images"
+        :key="i"
       >
         <v-img
           :src="img.src"
@@ -24,10 +24,13 @@
         />
       </v-carousel-item>
     </v-carousel>
-    <v-layout
-      wrap
-      style="max-width: 500px;"
+    <draggable
       v-show="nineGrid"
+      class="layout wrap"
+      style="max-width: 500px;"
+      :value="images"
+      @input="$emit('update:images', arguments[0])"
+      group="pd-preview-layout"
     >
       <v-flex
         :xs6="images.length === 4"
@@ -40,15 +43,19 @@
           aspect-ratio="1"
         />
       </v-flex>
-    </v-layout>
+    </draggable>
   </v-flex>
 </template>
 
 <script>
 import { mapConstants } from '@/libs/constants'
+import Draggable from 'vuedraggable'
 
 export default {
   name: 'PdPreviewLayout',
+  components: {
+    Draggable,
+  },
   props: {
     images: Array,
     layout: String,

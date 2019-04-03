@@ -63,7 +63,7 @@
                 </v-flex>
 
                 <pd-preview-layout
-                  :images="form.images"
+                  :images.sync="form.images"
                   :layout="form.layout"
                   v-show="canPreviewLayout"
                 />
@@ -72,7 +72,12 @@
                   v-show="!canPreviewLayout"
                   xs12
                 >
-                  <v-layout wrap>
+                  <draggable
+                    class="layout wrap"
+                    v-model="form.images"
+                    group="pd-image"
+                    draggable=".image-preview-wrap"
+                  >
                     <pd-image
                       v-for="(img, i) of form.images"
                       :src="img.src"
@@ -82,6 +87,7 @@
                       @click.native="$bus.$emit('image-edit', img)"
                     />
                     <v-flex
+                      slot="footer"
                       v-show="!maxed"
                       class="file-picker-wrap"
                       @click="onClickPicker"
@@ -98,7 +104,7 @@
                         @change="onFileSelect"
                       />
                     </v-flex>
-                  </v-layout>
+                  </draggable>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -118,6 +124,7 @@ import { LAYOUT_NINE_GRID, mapConstants } from '@/libs/constants'
 import PdPreviewLayout from '@/components/app/publish-dialog/PdPreviewLayout'
 import PdImageEdit from '@/components/app/publish-dialog/PdImageEdit'
 import { storePost } from '@/api/posts'
+import Draggable from 'vuedraggable'
 
 const MAX_IMAGES_COUNT = 9
 
@@ -127,6 +134,7 @@ export default {
     PdImageEdit,
     PdPreviewLayout,
     PdImage,
+    Draggable,
   },
   data: () => ({
     dialog: false,
