@@ -14,7 +14,9 @@
           <v-layout wrap>
             <v-flex xs12>
               <v-text-field
+                v-validate="'required|length:6,20'"
                 v-model="form.username"
+                :error-messages="errors.collect('username')"
                 ref="username"
                 name="username"
                 label="用户名"
@@ -23,7 +25,9 @@
             </v-flex>
             <v-flex xs12>
               <v-text-field
+                v-validate="'required|length:6,20'"
                 v-model="form.password"
+                :error-messages="errors.collect('password')"
                 type="password"
                 name="password"
                 label="密码"
@@ -57,9 +61,23 @@ export default {
       password: '',
     },
     loggedInCallback: null,
+
+    dictionary: {
+      custom: {
+        username: {
+          required: () => '我怎么知道你是谁？',
+          length: () => '别瞎试，只能是这么 6~20 这么长',
+        },
+        password: {
+          required: () => '不能随便让你登录啊',
+          length: () => '别瞎试，只能是这么 6~20 这么长',
+        },
+      },
+    },
   }),
   created() {
     this.$bus.$on('let-me-login', this.onLetMeLogin)
+    this.$validator.localize('en', this.dictionary)
   },
   beforeDestroy() {
     this.$bus.$off('let-me-login', this.onLetMeLogin)
@@ -70,6 +88,10 @@ export default {
       this.dialog = true
     },
     async onLogin() {
+      if (!await this.$validator.validateAll()) {
+        return false
+      }
+
       try {
         await this.$store.dispatch('login', this.form)
         this.$snackbar('登录咯')
