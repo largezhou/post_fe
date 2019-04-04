@@ -35,6 +35,10 @@
                 <v-flex xs12>
                   <v-textarea
                     v-model="form.content"
+                    v-validate="rules.content"
+                    ref="content"
+                    data-vv-name="content"
+                    :error-messages="errors.collect('content')"
                     name="content"
                     label="说点啥呢，，，"
                     no-resize
@@ -44,6 +48,10 @@
                   <v-layout>
                     <v-flex xs6>
                       <v-switch
+                        v-validate="rules.layout"
+                        data-vv-name="layout"
+                        ref="layout"
+                        :error-messages="errors.collect('layout')"
                         class="pick-switch"
                         v-model="form.layout"
                         :true-value="LAYOUT_CAROUSEL"
@@ -73,7 +81,10 @@
                   xs12
                 >
                   <draggable
-                    class="layout wrap"
+                    v-validate="rules.images"
+                    data-vv-name="images"
+                    ref="images"
+                    class="layout wrap images-select-wrap"
                     v-model="form.images"
                     group="pd-image"
                     draggable=".image-preview-wrap"
@@ -105,6 +116,18 @@
                       />
                     </v-flex>
                   </draggable>
+                  <div class="v-text-field__details">
+                    <div class="v-messages theme--light error--text">
+                      <div class="v-messages__wrapper">
+                        <div
+                          v-for="(err, i) of errors.collect('images')"
+                          :key="i"
+                          class="v-messages__message"
+                        >{{ err }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -120,11 +143,45 @@
 <script>
 import { mapState } from 'vuex'
 import PdImage from '@/components/app/publish-dialog/PdImage'
-import { LAYOUT_NINE_GRID, mapConstants } from '@/libs/constants'
+import {
+  LAYOUT_CAROUSEL,
+  LAYOUT_NINE_GRID,
+  mapConstants,
+} from '@/libs/constants'
 import PdPreviewLayout from '@/components/app/publish-dialog/PdPreviewLayout'
 import PdImageEdit from '@/components/app/publish-dialog/PdImageEdit'
 import { storePost } from '@/api/posts'
 import Draggable from 'vuedraggable'
+import Vue from 'vue'
+import VeeValidate, { Validator } from 'vee-validate'
+
+Vue.use(VeeValidate)
+
+// 如果没有传图片，则必须填文字内容
+Validator.extend('required_if_no_image', (content, [images]) => {
+  return {
+    valid: !!content,
+    data: {
+      required: images.length === 0,
+    },
+  }
+}, {
+  hasTarget: true,
+  computesRequired: true,
+})
+
+// 如果没有填文字内容，则必须至少上传一张图片
+Validator.extend('not_empty_if_no_content', (images, [content]) => {
+  return {
+    valid: images.length > 0,
+    data: {
+      required: !content,
+    },
+  }
+}, {
+  hasTarget: true,
+  computesRequired: true,
+})
 
 const MAX_IMAGES_COUNT = 9
 
@@ -144,6 +201,37 @@ export default {
       layout: LAYOUT_NINE_GRID,
     },
     previewLayout: false,
+
+    rules: {
+      content: {
+        required_if_no_image: 'images',
+        max: 255,
+      },
+      images: {
+        // 这个不知道为啥，每次验证的 content 都是上一次的值
+        // 应该跟 draggable 有关
+        not_empty_if_no_content: 'content',
+        length: [0, MAX_IMAGES_COUNT],
+      },
+      layout: {
+        included: [LAYOUT_CAROUSEL, LAYOUT_NINE_GRID],
+      },
+    },
+    dictionary: {
+      custom: {
+        content: {
+          required_if_no_image: () => '总要说点什么吧，图片也没有',
+          max: () => '内容太多了，没什么意义',
+        },
+        images: {
+          not_empty_if_no_content: () => '什么都没说，总要来张图吧',
+          length: () => `图片太多了吧，最多只能 ${MAX_IMAGES_COUNT} 张的`,
+        },
+        layout: {
+          included: () => '选错了吧',
+        },
+      },
+    },
   }),
   computed: {
     ...mapState({
@@ -167,6 +255,7 @@ export default {
     // 备份初始 form 数据，用来重置表单
     this.formBak = JSON.stringify(this.form)
     this.$bus.$on('let-me-publish', this.onLetMePublish)
+    this.$validator.localize('en', this.dictionary)
   },
   beforeDestroy() {
     this.$bus.$off('let-me-publish', this.onLetMePublish)
@@ -214,6 +303,10 @@ export default {
      * 请求发布
      */
     async onPublish() {
+      if (!await this.$validator.validateAll()) {
+        return false
+      }
+
       const form = this.form
 
       const fd = new FormData()
@@ -272,5 +365,9 @@ export default {
     height: 26px;
     margin: 0;
   }
+}
+
+.images-select-wrap {
+  margin-bottom: 8px !important;
 }
 </style>
