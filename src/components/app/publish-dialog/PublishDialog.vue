@@ -35,6 +35,9 @@
                 <v-flex xs12>
                   <v-textarea
                     v-model="form.content"
+                    v-validate="rules.content"
+                    data-vv-name="content"
+                    :error-messages="errors.collect('content')"
                     name="content"
                     label="说点啥呢，，，"
                     no-resize
@@ -44,6 +47,9 @@
                   <v-layout>
                     <v-flex xs6>
                       <v-switch
+                        v-validate="rules.layout"
+                        data-vv-name="layout"
+                        :error-messages="errors.collect('layout')"
                         class="pick-switch"
                         v-model="form.layout"
                         :true-value="LAYOUT_CAROUSEL"
@@ -73,6 +79,8 @@
                   xs12
                 >
                   <draggable
+                    v-validate="rules.images"
+                    data-vv-name="images"
                     class="layout wrap"
                     v-model="form.images"
                     group="pd-image"
@@ -120,15 +128,27 @@
 <script>
 import { mapState } from 'vuex'
 import PdImage from '@/components/app/publish-dialog/PdImage'
-import { LAYOUT_NINE_GRID, mapConstants } from '@/libs/constants'
+import {
+  LAYOUT_CAROUSEL,
+  LAYOUT_NINE_GRID,
+  mapConstants,
+} from '@/libs/constants'
 import PdPreviewLayout from '@/components/app/publish-dialog/PdPreviewLayout'
 import PdImageEdit from '@/components/app/publish-dialog/PdImageEdit'
 import { storePost } from '@/api/posts'
 import Draggable from 'vuedraggable'
+import Vue from 'vue'
+import VeeValidate from 'vee-validate'
+
+Vue.use(VeeValidate)
 
 const MAX_IMAGES_COUNT = 9
 
 export default {
+  $_veeValidate: {
+    validator: 'new',
+  },
+
   name: 'PublishDialog',
   components: {
     PdImageEdit,
@@ -144,6 +164,28 @@ export default {
       layout: LAYOUT_NINE_GRID,
     },
     previewLayout: false,
+
+    rules: {
+      content: 'required',
+      images: 'length:0,3',
+      layout: `included:${LAYOUT_NINE_GRID},${LAYOUT_CAROUSEL}`,
+    },
+    dictionary: {
+      attributes: {
+        content: '内容',
+      },
+      custom: {
+        content: {
+          required: () => '总要说的点啥吧',
+        },
+        images: {
+          length: () => '图片太多了吧，最多只能 9 张的',
+        },
+        layout: {
+          included: () => '选错了吧',
+        },
+      },
+    },
   }),
   computed: {
     ...mapState({
@@ -167,6 +209,7 @@ export default {
     // 备份初始 form 数据，用来重置表单
     this.formBak = JSON.stringify(this.form)
     this.$bus.$on('let-me-publish', this.onLetMePublish)
+    this.$validator.localize('en', this.dictionary)
   },
   beforeDestroy() {
     this.$bus.$off('let-me-publish', this.onLetMePublish)
@@ -214,6 +257,12 @@ export default {
      * 请求发布
      */
     async onPublish() {
+      this.$validator.validateAll()
+        .then(() => {
+          log(arguments)
+        })
+      return false
+
       const form = this.form
 
       const fd = new FormData()
