@@ -10,6 +10,7 @@ import '@/libs/globals'
 import utils from '@/libs/utils'
 import '@/mocks'
 import '@/libs/constants'
+import '@/plugins/vee-validate'
 
 Vue.config.productionTip = false
 

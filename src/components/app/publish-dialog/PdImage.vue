@@ -27,3 +27,22 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+.image-preview-wrap {
+  height: 100px;
+  width: 100px;
+  max-width: 100px;
+  position: relative;
+}
+
+.clear {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+}
+</style>
