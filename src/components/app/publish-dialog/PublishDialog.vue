@@ -264,6 +264,7 @@ export default {
     onReset() {
       this.form = JSON.parse(this.formBak)
       this.previewLayout = false
+      this.$validator.reset()
     },
     onClose() {
       this.dialog = false
