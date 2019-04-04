@@ -13,10 +13,6 @@ mock('/posts', 'post', {
 }, (tmpl, options) => {
   // 按请求中的数据，来生成接近真实的返回数据
   const body = options.body
-  const data = tmpl.data
-
-  data.content = body.get('content')
-  data.layout = body.get('layout')
 
   const images = []
   for (let k of body.keys()) {
@@ -24,6 +20,13 @@ mock('/posts', 'post', {
       images.push(URL.createObjectURL(body.get(k)))
     }
   }
-  data.images = images
-  data.created_at = dayjs().format('YYYY-MM-DD HH:mm:ss')
+
+  return {
+    data: {
+      content: body.get('content'),
+      layout: body.get('layout'),
+      images,
+      created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    },
+  }
 })

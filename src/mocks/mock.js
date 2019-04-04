@@ -23,11 +23,13 @@ const resolve = (path) => {
 
 export default (path, method, template = {}, callback) => {
   Mock.mock(resolve(path), method, (options) => {
+    let modifiedTmpl
+
     if (typeof callback === 'function') {
-      callback(template, options)
+      modifiedTmpl = callback(template, options)
     }
 
-    const res = Mock.mock(template)
+    const res = Mock.mock(modifiedTmpl || template)
     return res.data
   })
 }
