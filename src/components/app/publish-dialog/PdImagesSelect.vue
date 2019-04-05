@@ -54,6 +54,7 @@
 import PdImage from './PdImage'
 import { mapConstants } from '@/libs/constants'
 import Draggable from 'vuedraggable'
+import utils from '@/libs/utils'
 
 export default {
   name: 'PdImagesSelect',
@@ -74,23 +75,36 @@ export default {
     },
   },
   methods: {
-    onFileSelect(e) {
+    async onFileSelect(e) {
       const images = [...this.value]
 
-      const files = Array.from(e.target.files)
+      let files = Array.from(e.target.files)
         .slice(0, this.MAX_IMAGES_COUNT - images.length)
-        .map((f) => {
-          return {
-            file: f,
-            src: URL.createObjectURL(f),
-            naked: false,
-          }
+      // 这个 mock 会处理所有请求，但是不能正确处理 blob 返回格式
+      // 使用了 mockjs 会出问题，
+      // 所以使用了 mock 就不处理旋转问题
+      if (!process.env.VUE_APP_USE_MOCK) {
+        files = await this.handleFiles(files)
+      }
+
+      files.forEach((f) => {
+        images.push({
+          file: f,
+          src: URL.createObjectURL(f),
+          naked: false,
         })
-      images.push(...files)
+      })
       // 清除文件 input 的值，这样就可以重复选择同一张图片
       e.target.value = ''
 
       this.$emit('input', images)
+    },
+    // 处理旋转问题
+    handleFiles(files) {
+      const promises = files.map((f) => {
+        return utils.fixImageOrientation(f)
+      })
+      return Promise.all(promises)
     },
     onClear(index) {
       const images = [...this.value]
