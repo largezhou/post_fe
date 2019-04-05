@@ -16,7 +16,7 @@
             @click="onClose"
             color="grey lighten-5"
           >
-            <mdi-icon>close</mdi-icon>
+            <mdi-icon icon="close"/>
           </v-btn>
           <v-spacer/>
           <v-toolbar-items>

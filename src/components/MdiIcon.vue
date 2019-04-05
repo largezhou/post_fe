@@ -5,14 +5,8 @@
 <script>
 export default {
   name: 'MdiIcon',
-  computed: {
-    icon() {
-      if (this.$slots.default) {
-        return this.$slots.default[0].text
-      } else {
-        return ''
-      }
-    },
+  props: {
+    icon: String,
   },
 }
 </script>

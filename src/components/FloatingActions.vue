@@ -19,7 +19,7 @@
             color="red"
             @click="onGotoTop"
           >
-            <mdi-icon>arrow-collapse-up</mdi-icon>
+            <mdi-icon icon="arrow-collapse-up"/>
           </v-btn>
         </v-flex>
       </v-scale-transition>

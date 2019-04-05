@@ -22,7 +22,10 @@
         @click="onClickPicker"
         :disabled="countMax"
       >
-        <mdi-icon class="picker-icon">plus</mdi-icon>
+        <mdi-icon
+          class="picker-icon"
+          icon="plus"
+        />
         <input
           ref="fileInput"
           hidden

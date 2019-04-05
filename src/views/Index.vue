@@ -49,7 +49,7 @@
                     </v-card-text>
                     <!--<v-spacer/>
                     <v-btn icon>
-                      <mdi-icon>heart-outline</mdi-icon>
+                      <mdi-icon icon="heart-outline"/>
                     </v-btn>-->
                   </v-card-actions>
                 </v-card>

@@ -13,7 +13,7 @@
         color="pink"
         @click.stop="$emit('clear')"
       >
-        <mdi-icon>close</mdi-icon>
+        <mdi-icon icon="close"/>
       </v-btn>
     </v-scale-transition>
   </v-flex>

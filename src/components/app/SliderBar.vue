@@ -14,27 +14,38 @@
         active-class=""
       >
         <v-list-tile-action>
-          <mdi-icon>{{ menu.icon }}</mdi-icon>
+          <mdi-icon :icon="menu.icon"/>
         </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>{{ menu.title }}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
-    <template v-if="loggedIn">
-      <v-divider/>
-      <v-list-tile
-        active-class=""
-        @click="onLogout"
-      >
-        <v-list-tile-action>
-          <mdi-icon>exit-to-app</mdi-icon>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title>退出</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-    </template>
+    <!--<v-divider/>-->
+    <v-list-tile
+      v-if="loggedIn"
+      active-class=""
+      @click="onLogout"
+    >
+      <v-list-tile-action>
+        <mdi-icon icon="exit-to-app"/>
+      </v-list-tile-action>
+      <v-list-tile-content>
+        <v-list-tile-title>退出</v-list-tile-title>
+      </v-list-tile-content>
+    </v-list-tile>
+    <v-list-tile
+      v-else
+      active-class=""
+      @click="onLogin"
+    >
+      <v-list-tile-action>
+        <mdi-icon icon="account"/>
+      </v-list-tile-action>
+      <v-list-tile-content>
+        <v-list-tile-title>登录</v-list-tile-title>
+      </v-list-tile-content>
+    </v-list-tile>
   </v-navigation-drawer>
 </template>
 
@@ -45,26 +56,26 @@ export default {
   name: 'SliderBar',
   data: () => ({
     menus: [
-      {
-        to: '/',
-        icon: 'home',
-        title: 'Home',
-      },
-      {
-        to: '/about',
-        icon: 'information',
-        title: 'About',
-      },
-      {
-        to: '/page-not-found',
-        icon: 'flask-empty',
-        title: 'Page not found',
-      },
-      {
-        to: '/admin',
-        icon: 'flask-empty',
-        title: 'Admin',
-      },
+      // {
+      //   to: '/',
+      //   icon: 'home',
+      //   title: 'Home',
+      // },
+      // {
+      //   to: '/about',
+      //   icon: 'information',
+      //   title: 'About',
+      // },
+      // {
+      //   to: '/page-not-found',
+      //   icon: 'flask-empty',
+      //   title: 'Page not found',
+      // },
+      // {
+      //   to: '/admin',
+      //   icon: 'flask-empty',
+      //   title: 'Admin',
+      // },
     ],
   }),
   computed: {
@@ -89,6 +100,11 @@ export default {
       } catch (e) {
 
       }
+    },
+    onLogin() {
+      this.$bus.$emit('let-me-login', () => {
+        this.$store.dispatch('getInfo')
+      })
     },
     close() {
       this.$store.commit('CHANGE_SLIDER_BAR', false)

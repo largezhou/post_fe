@@ -40,7 +40,7 @@
       color="pink"
       @click="dialog = false"
     >
-      <mdi-icon>close</mdi-icon>
+      <mdi-icon icon="close"/>
     </v-btn>
   </v-dialog>
 </template>
