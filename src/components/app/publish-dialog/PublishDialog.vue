@@ -20,12 +20,12 @@
           </v-btn>
           <v-spacer/>
           <v-toolbar-items>
-            <v-btn
+            <loading-action
               flat
-              @click="onPublish"
+              :action="onPublish"
             >
               <span class="icon-publish"/>
-            </v-btn>
+            </loading-action>
           </v-toolbar-items>
         </v-toolbar>
         <v-card-text>
@@ -111,10 +111,12 @@ import PdPreviewLayout from './PdPreviewLayout'
 import PdImageEdit from './PdImageEdit'
 import PdImagesSelect from './PdImagesSelect'
 import { storePost } from '@/api/posts'
+import LoadingAction from '@/components/LoadingAction'
 
 export default {
   name: 'PublishDialog',
   components: {
+    LoadingAction,
     PdImagesSelect,
     PdImageEdit,
     PdPreviewLayout,

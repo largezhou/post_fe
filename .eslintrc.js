@@ -21,6 +21,7 @@ module.exports = {
     ],
     'eqeqeq': ['warn'],
     'no-eval': ['warn'],
+    'vue/require-component-is': 'never',
   },
   parserOptions: {
     parser: 'babel-eslint',

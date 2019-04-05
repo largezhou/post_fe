@@ -37,23 +37,30 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
+        <v-spacer/>
         <v-btn
           flat
           @click="dialog = false"
         >取消</v-btn>
-        <v-btn
+        <loading-action
           flat
-          @click="onLogin"
-        >登录</v-btn>
+          :action="onLogin"
+        >
+          登录
+        </loading-action>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import LoadingAction from '@/components/LoadingAction'
+
 export default {
   name: 'LoginDialog',
+  components: {
+    LoadingAction,
+  },
   data: () => ({
     dialog: false,
     form: {
@@ -92,16 +99,12 @@ export default {
         return false
       }
 
-      try {
-        await this.$store.dispatch('login', this.form)
-        this.$snackbar('登录咯')
-        this.dialog = false
+      await this.$store.dispatch('login', this.form)
+      this.$snackbar('登录咯')
+      this.dialog = false
 
-        if (typeof this.loggedInCallback === 'function') {
-          this.loggedInCallback()
-        }
-      } catch (e) {
-
+      if (typeof this.loggedInCallback === 'function') {
+        this.loggedInCallback()
       }
     },
   },
@@ -113,6 +116,7 @@ export default {
         })
       } else {
         this.$refs.form.reset()
+        this.$validator.reset()
       }
     },
   },
