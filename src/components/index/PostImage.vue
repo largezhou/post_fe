@@ -2,10 +2,10 @@
   <!--单张图片 强制直接显示-->
   <a
     v-if="images.length === 1"
-    :href="images[0]"
+    :href="images[0].thumb"
     target="_blank"
   >
-    <v-img :src="images[0]"/>
+    <v-img :src="images[0].thumb"/>
   </a>
 
   <!--轮播-->
@@ -16,10 +16,10 @@
     :cycle="false"
   >
     <v-carousel-item
-      v-for="(src, i) of images"
+      v-for="(img, i) of images"
       class="pointer"
       :key="i"
-      :src="src"
+      :src="img.thumb"
       @click.stop="onPreviewImage(i)"
     />
   </v-carousel>
@@ -36,7 +36,7 @@
       wrap
     >
       <v-flex
-        v-for="(src, i) of images"
+        v-for="(img, i) of images"
         :key="i"
         :xs6="images.length === 4"
         :xs4="images.length !== 4"
@@ -44,7 +44,7 @@
       >
         <v-img
           class="pointer"
-          :src="src"
+          :src="img.thumb"
           aspect-ratio="1"
           @click.stop="onPreviewImage(i)"
         />

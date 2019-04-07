@@ -13,7 +13,7 @@
       height="100%"
     >
       <v-carousel-item
-        v-for="(src, i) of images"
+        v-for="(img, i) of images"
         :key="i"
       >
         <v-layout
@@ -21,10 +21,10 @@
           @click.self="onClickOtherArea"
         >
           <a
-            :href="src"
+            :href="img.src"
             target="_blank"
           >
-            <img :src="src"/>
+            <img :src="img.src"/>
           </a>
         </v-layout>
       </v-carousel-item>
