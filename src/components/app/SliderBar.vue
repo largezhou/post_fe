@@ -21,7 +21,15 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
-    <!--<v-divider/>-->
+    <v-list-tile>
+      <v-list-tile-action>
+        <v-switch
+          v-model="naked"
+          :label="naked ? '有裸露' : '无裸露'"
+        />
+      </v-list-tile-action>
+    </v-list-tile>
+    <v-divider/>
     <v-list-tile
       v-if="loggedIn"
       active-class=""
@@ -86,6 +94,14 @@ export default {
     loggedIn() {
       return !!this.username
     },
+    naked: {
+      get() {
+        return this.$store.state.app.naked
+      },
+      set(value) {
+        this.$store.commit('CHANGE_NAKED', value)
+      },
+    },
   },
   methods: {
     onSliderBarChange(val) {
@@ -108,6 +124,11 @@ export default {
     },
     close() {
       this.$store.commit('CHANGE_SLIDER_BAR', false)
+    },
+  },
+  watch: {
+    naked() {
+      this.$bus.$emit('reload-index')
     },
   },
 }

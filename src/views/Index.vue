@@ -101,6 +101,7 @@ export default {
   },
   async created() {
     this.$bus.$on('new-post', this.onNewPost)
+    this.$bus.$on('reload-index', this.onReloadIndex)
     this.InitIntersectionObserver()
     await this.getPosts()
     this.$nextTick(() => {
@@ -109,6 +110,7 @@ export default {
   },
   beforeDestroy() {
     this.$bus.$off('new-post', this.onNewPost)
+    this.$bus.$off('reload-index', this.onReloadIndex)
   },
   methods: {
     async getPosts(lastId = 0) {
@@ -118,9 +120,15 @@ export default {
 
       this.loading = true
       try {
-        const { data: { data, meta } } = await getPosts({
+        const params = {
           last_id: lastId,
-        })
+        }
+        const naked = Number(!!this.$store.state.app.naked)
+        if (naked) {
+          params.naked = naked
+        }
+
+        const { data: { data, meta } } = await getPosts(params)
         const oldLength = this.posts.length
         this.posts.push(...data)
         this.initLazyLoad(oldLength)
@@ -181,6 +189,12 @@ export default {
           this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_DONE)
         }
       })
+    },
+    onReloadIndex() {
+      this.posts = []
+      this.theEnd = false
+      this.loading = false
+      // this.getPosts()
     },
   },
 }
