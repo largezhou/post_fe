@@ -81,3 +81,37 @@ utils.fixImageOrientation = (file) => {
     }
   })
 }
+
+/**
+ * 从url创建一个a标签并返回，用来获取url中的各种属性，比如host，path，hash等
+ *
+ * @param url
+ * @returns {HTMLElement}
+ */
+utils.getUrlObj = (url) => {
+  const a = document.createElement('a')
+  a.href = url
+
+  return a
+}
+
+/**
+ * 获取 url 中的 query
+ *
+ * @param url
+ * @return {Object}
+ */
+utils.queryFromUrl = (url) => {
+  url = utils.getUrlObj(url).search
+
+  const query = {}
+  let pairs = (url[0] === '?' ? url.substr(1) : url).split('&')
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i].split('=')
+    if (pair[0]) {
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '')
+    }
+  }
+
+  return query
+}

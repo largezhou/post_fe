@@ -23,7 +23,6 @@ export default {
     loading: false,
   }),
   props: {
-    type: String,
     action: Function,
     /**
      * 作为什么组件

@@ -6,7 +6,13 @@
 
     <navbar/>
 
-    <router-view/>
+    <keep-alive>
+      <router-view
+        v-if="$route.meta.keepAlive"
+        :key="$route.name"
+      />
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"/>
 
     <v-footer>
       <v-layout

@@ -7,6 +7,9 @@ Vue.use(Router)
 const indexPage = {
   path: '/',
   name: 'index',
+  meta: {
+    keepAlive: true,
+  },
   component: Index,
 }
 
@@ -57,6 +60,10 @@ const routes = [
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
+  scrollBehavior(to, from, savedPosition) {
+    // savedPosition 为 null 表示页面是跳转的，而不是历史记录中`前进`或`后退`
+    return savedPosition || { x: 0, y: 0 }
+  },
   routes: [
     indexPage,
     {

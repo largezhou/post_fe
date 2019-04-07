@@ -27,8 +27,8 @@
               <v-flex
                 px-0
                 py-5
-                v-for="(p, i) of posts"
-                :key="i"
+                v-for="p of posts"
+                :key="p.id"
                 xs12
               >
                 <v-card>
@@ -62,6 +62,10 @@
 
     <preview-dialog/>
 
+    <div ref="loadMore" class="load-more">
+      <span v-show="loading">来咯...</span>
+      <span v-show="theEnd">没有了...</span>
+    </div>
   </v-content>
 </template>
 
@@ -82,28 +86,54 @@ export default {
   data: () => ({
     posts: [],
     height: window.innerHeight,
+    theEnd: false,
+    loading: false,
   }),
-  created() {
+  async created() {
     this.$bus.$on('new-post', this.onNewPost)
+    await this.getPosts()
+    this.$nextTick(() => {
+      this.initIntersectionObserver()
+    })
   },
   beforeDestroy() {
     this.$bus.$off('new-post', this.onNewPost)
   },
   methods: {
-    async getPosts() {
-      const { data } = await getPosts()
-      this.posts = data.data
+    async getPosts(lastId = 0) {
+      if (this.theEnd && this.loading) {
+        return false
+      }
+
+      this.loading = true
+      try {
+        const { data: { data, meta } } = await getPosts({
+          last_id: lastId,
+        })
+        this.posts.push(...data)
+        this.theEnd = data.length < meta.per_page
+      } finally {
+        this.loading = false
+      }
     },
     onNewPost(data) {
       this.posts.unshift(data)
     },
-  },
-  watch: {
-    $route: {
-      handler() {
-        this.getPosts()
-      },
-      immediate: true,
+    onLoadMore() {
+      const lastId = this.posts.length > 0
+        ? this.posts[this.posts.length - 1].id
+        : 0
+      this.getPosts(lastId)
+    },
+    initIntersectionObserver() {
+      this.ioIns = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !this.theEnd) {
+          this.onLoadMore()
+        } else if (this.theEnd) {
+          this.ioIns.unobserve(this.$refs.loadMore)
+        }
+      })
+      this.ioIns.observe(this.$refs.loadMore)
     },
   },
 }
@@ -112,5 +142,14 @@ export default {
 <style scoped lang="scss">
 .content {
   max-width: 600px;
+}
+
+.load-more {
+  width: 100%;
+  background: none;
+  font-size: 20px;
+  text-align: center;
+  padding-bottom: 20px;
+  color: #BDBDBD;
 }
 </style>
