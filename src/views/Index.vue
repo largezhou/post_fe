@@ -139,21 +139,25 @@ export default {
       this.getPosts(lastId)
     },
     InitIntersectionObserver() {
-      this.loadMoreObserver = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting && !this.theEnd) {
-          this.onLoadMore()
-        } else if (this.theEnd) {
-          this.loadMoreObserver.unobserve(this.$refs.loadMore)
-        }
+      this.loadMoreObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !this.theEnd) {
+            this.onLoadMore()
+          } else if (this.theEnd) {
+            this.loadMoreObserver.unobserve(this.$refs.loadMore)
+          }
+        })
       })
 
-      this.lazyLoadObserver = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
+      this.lazyLoadObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
           const index = entry.target.dataset.index
-          const postImage = this.$refs.postImages[index]
-          this.loadImages(postImage.images)
-          this.lazyLoadObserver.unobserve(entry.target)
-        }
+          if (entry.isIntersecting) {
+            const postImage = this.$refs.postImages[index]
+            this.loadImages(postImage.images)
+            this.lazyLoadObserver.unobserve(entry.target)
+          }
+        })
       })
     },
     initLazyLoad(oldPostLength) {

@@ -13,7 +13,7 @@
 
   <!--轮播-->
   <v-carousel
-    v-else-if="post.layout === 'carousel'"
+    v-else-if="images.length > 1 && post.layout === LAYOUT_CAROUSEL"
     class="elevation-0"
     height="auto"
     style="min-height: 300px;"
@@ -31,7 +31,7 @@
 
   <!--九宫格-->
   <v-container
-    v-else
+    v-else-if="images.length > 1 && post.layout === LAYOUT_NINE_GRID"
     grid-list-sm
     fluid
     pa-2
@@ -75,6 +75,9 @@ export default {
       'IMAGE_LOAD_STATE_INIT',
       'IMAGE_LOAD_STATE_LOADING',
       'IMAGE_LOAD_STATE_DONE',
+
+      'LAYOUT_NINE_GRID',
+      'LAYOUT_CAROUSEL',
     ]),
     images() {
       return this.post.images
