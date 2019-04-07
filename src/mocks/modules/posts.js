@@ -1,5 +1,7 @@
 import mock from '../mock'
-import postTmpl from '../templates/posts'
+import postTmpl, {
+  postImage,
+} from '../templates/posts'
 import dayjs from 'dayjs'
 import utils from '@/libs/utils'
 
@@ -31,13 +33,16 @@ mock('/posts', 'post', {
   const images = []
   for (let k of body.keys()) {
     if (k.indexOf('images[') === 0) {
-      images.push(URL.createObjectURL(body.get(k)))
+      images.push({
+        thumb: postImage,
+        src: URL.createObjectURL(body.get(k)),
+      })
     }
   }
 
   return {
     data: {
-      id: '@integer',
+      id: '@integer(999, 9999)',
       content: body.get('content'),
       layout: body.get('layout'),
       images,
