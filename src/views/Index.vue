@@ -41,7 +41,7 @@
                     :post="p"
                   />
 
-                  <v-card-text class="headline">{{ p.content }}</v-card-text>
+                  <n-to-br :content="p.content"/>
 
                   <v-card-actions>
                     <v-card-text class="py-0 px-2">
@@ -79,9 +79,11 @@ import HumanTime from '@/components/HumanTime'
 import PostImage from '@/components/index/PostImage'
 import PreviewDialog from '@/components/index/PreviewDialog'
 import { mapConstants } from '@/libs/constants'
+import NToBr from '@/components/index/NToBr'
 
 export default {
   components: {
+    NToBr,
     PreviewDialog,
     PostImage,
     HumanTime,
@@ -208,6 +210,10 @@ export default {
       this.posts = []
       this.theEnd = false
       this.loading = false
+    },
+    nlToBr(content) {
+      log(1)
+      return content.replace(/\n/g, '<br>')
     },
   },
 }
