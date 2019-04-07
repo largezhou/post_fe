@@ -56,26 +56,26 @@ export default {
   name: 'SliderBar',
   data: () => ({
     menus: [
-      {
-        to: '/',
-        icon: 'home',
-        title: 'Home',
-      },
-      {
-        to: '/about',
-        icon: 'information',
-        title: 'About',
-      },
-      {
-        to: '/page-not-found',
-        icon: 'flask-empty',
-        title: 'Page not found',
-      },
-      {
-        to: '/admin',
-        icon: 'flask-empty',
-        title: 'Admin',
-      },
+      // {
+      //   to: '/',
+      //   icon: 'home',
+      //   title: 'Home',
+      // },
+      // {
+      //   to: '/about',
+      //   icon: 'information',
+      //   title: 'About',
+      // },
+      // {
+      //   to: '/page-not-found',
+      //   icon: 'flask-empty',
+      //   title: 'Page not found',
+      // },
+      // {
+      //   to: '/admin',
+      //   icon: 'flask-empty',
+      //   title: 'Admin',
+      // },
     ],
   }),
   computed: {
