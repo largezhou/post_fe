@@ -26,7 +26,7 @@
             >
               <v-flex
                 class="post"
-                ref="posts"
+                ref="postWraps"
                 px-0
                 py-5
                 v-for="(p, i) of posts"
@@ -138,7 +138,18 @@ export default {
       }
     },
     onNewPost(data) {
+      const t = this.$refs.postImages
+
       this.posts.unshift(data)
+
+      // 由于加在前面的元素，在 refs 中，也是往后排的
+      // 所以，这里手动把前面的新元素，放到 refs 中的前面
+      this.$nextTick(() => {
+        this.$refs.postImages = [
+          t[t.length - 1],
+          ...t.slice(0, t.length - 1),
+        ]
+      })
     },
     onLoadMore() {
       const lastId = this.posts.length > 0
@@ -160,8 +171,8 @@ export default {
       this.lazyLoadObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           const index = entry.target.dataset.index
+          const postImage = this.$refs.postImages[index]
           if (entry.isIntersecting) {
-            const postImage = this.$refs.postImages[index]
             this.loadImages(postImage.images)
             this.lazyLoadObserver.unobserve(entry.target)
           }
@@ -172,7 +183,7 @@ export default {
       this.$nextTick(() => {
         this
           .$refs
-          .posts
+          .postWraps
           .slice(oldPostLength)
           .forEach((el) => {
             this.lazyLoadObserver.observe(el)
