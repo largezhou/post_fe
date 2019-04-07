@@ -2,10 +2,10 @@
   <v-content class="pa-0">
     <v-container
       fluid
-      pa-0
+      pahidebanner-0
     >
       <v-layout>
-        <banner/>
+        <!--<banner/>-->
       </v-layout>
 
       <v-layout

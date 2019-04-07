@@ -3,8 +3,8 @@
     v-scroll="onScroll"
     class="navbar"
     app
-    :class="[elevationLevel]"
-    :style="{ background }"
+    :classhidebanner="[elevationLevel]"
+    :stylehidebanner="{ background }"
   >
     <v-toolbar-side-icon
       @click.stop="$store.commit('TOGGLE_SLIDER_BAR')"
