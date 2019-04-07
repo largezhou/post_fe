@@ -1,6 +1,7 @@
 import axios from 'axios'
 import utils from '@/libs/utils'
 import store from '@/store'
+import { getToken } from '@/libs/token'
 
 let config = {
   baseURL: process.env.VUE_APP_BASE_URL || '/',
@@ -11,6 +12,7 @@ const _axios = axios.create(config)
 
 _axios.interceptors.request.use(
   (config) => {
+    config.headers.Authorization = getToken()
     return config
   },
   (error) => {
