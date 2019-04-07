@@ -83,16 +83,13 @@ export default {
 
       let files = Array.from(e.target.files)
         .slice(0, this.MAX_IMAGES_COUNT - images.length)
-      // 这个 mock 会处理所有请求，但是不能正确处理 blob 返回格式
-      // 使用了 mockjs 会出问题，
-      // 所以使用了 mock 就不处理旋转问题
-      if (!process.env.VUE_APP_USE_MOCK) {
-        files = await this.handleFiles(files)
-      }
+      files = await this.handleRotate(files)
+      const thumbs = await this.makeThumb(files)
 
-      files.forEach((f) => {
+      files.forEach((f, index) => {
         images.push({
           file: f,
+          thumb: thumbs[index],
           src: URL.createObjectURL(f),
           naked: false,
         })
@@ -103,11 +100,16 @@ export default {
       this.$emit('input', images)
     },
     // 处理旋转问题
-    handleFiles(files) {
-      const promises = files.map((f) => {
-        return utils.fixImageOrientation(f)
-      })
-      return Promise.all(promises)
+    handleRotate(files) {
+      if (process.env.VUE_APP_USE_MOCK) {
+        return files
+      } else {
+        return Promise.all(files.map((f) => utils.fixImageOrientation(f)))
+      }
+    },
+    // 生成缩略图
+    makeThumb(files) {
+      return Promise.all(files.map((f) => utils.makeThumb(f)))
     },
     onClear(index) {
       const images = [...this.value]

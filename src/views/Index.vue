@@ -194,7 +194,6 @@ export default {
       this.posts = []
       this.theEnd = false
       this.loading = false
-      // this.getPosts()
     },
   },
 }

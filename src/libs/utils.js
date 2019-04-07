@@ -2,8 +2,6 @@ import Snackbar from '@/components/modals/Snackbar'
 import store from '@/store'
 import EXIF from 'exif-js'
 
-window.t = EXIF
-
 const utils = {}
 
 export default utils
@@ -73,7 +71,7 @@ utils.fixImageOrientation = (file) => {
               break
           }
           // 返回新图片
-          canvas.toBlob((file) => resolve(file), 'image/jpeg', 0.90)
+          canvas.toBlob((file) => resolve(file), file.type, 0.92)
         } else {
           return resolve(file)
         }
@@ -114,4 +112,40 @@ utils.queryFromUrl = (url) => {
   }
 
   return query
+}
+
+/**
+ * 生成缩略图
+ *
+ * @param file
+ * @param maxDimensions 最大长宽，默认为 600
+ * @return {Promise<any>}
+ */
+utils.makeThumb = (file, maxDimensions = 600) => {
+  return new Promise((resolve, reject) => {
+    // 获取图片（加载图片是为了获取图片的宽高）
+    const img = new Image()
+    img.src = window.URL.createObjectURL(file)
+    img.onerror = () => reject(file)
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      let w = img.width
+      let h = img.height
+
+      if (w <= maxDimensions && h <= maxDimensions) {
+        resolve(file)
+      }
+
+      const ratio = maxDimensions / (w > h ? w : h)
+      w *= ratio
+      h *= ratio
+
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0, w, h)
+
+      canvas.toBlob((file) => resolve(file), file.type, 0.92)
+    }
+  })
 }

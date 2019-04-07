@@ -224,6 +224,7 @@ export default {
       // 所以 images 对象数组，使用这种方式
       form.images.forEach((img, i) => {
         fd.append(`images[${i}]`, img.file)
+        fd.append(`thumbs[${i}]`, img.thumb)
         fd.append(`naked[${i}]`, img.naked)
       })
 
