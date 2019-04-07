@@ -25,16 +25,19 @@
               ma-0
             >
               <v-flex
+                class="post"
+                ref="posts"
                 px-0
                 py-5
-                v-for="p of posts"
+                v-for="(p, i) of posts"
                 :key="p.id"
                 xs12
+                :data-index="i"
               >
                 <v-card>
 
                   <post-image
-                    v-if="p.images.length > 0"
+                    ref="postImages"
                     :post="p"
                   />
 
@@ -75,6 +78,7 @@ import { getPosts } from '@/api/posts'
 import HumanTime from '@/components/HumanTime'
 import PostImage from '@/components/index/PostImage'
 import PreviewDialog from '@/components/index/PreviewDialog'
+import { mapConstants } from '@/libs/constants'
 
 export default {
   components: {
@@ -89,11 +93,18 @@ export default {
     theEnd: false,
     loading: false,
   }),
+  computed: {
+    ...mapConstants([
+      'IMAGE_LOAD_STATE_LOADING',
+      'IMAGE_LOAD_STATE_DONE',
+    ]),
+  },
   async created() {
     this.$bus.$on('new-post', this.onNewPost)
+    this.InitIntersectionObserver()
     await this.getPosts()
     this.$nextTick(() => {
-      this.initIntersectionObserver()
+      this.loadMoreObserver.observe(this.$refs.loadMore)
     })
   },
   beforeDestroy() {
@@ -110,7 +121,9 @@ export default {
         const { data: { data, meta } } = await getPosts({
           last_id: lastId,
         })
+        const oldLength = this.posts.length
         this.posts.push(...data)
+        this.initLazyLoad(oldLength)
         this.theEnd = data.length < meta.per_page
       } finally {
         this.loading = false
@@ -125,15 +138,45 @@ export default {
         : 0
       this.getPosts(lastId)
     },
-    initIntersectionObserver() {
-      this.ioIns = new IntersectionObserver(([entry]) => {
+    InitIntersectionObserver() {
+      this.loadMoreObserver = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting && !this.theEnd) {
           this.onLoadMore()
         } else if (this.theEnd) {
-          this.ioIns.unobserve(this.$refs.loadMore)
+          this.loadMoreObserver.unobserve(this.$refs.loadMore)
         }
       })
-      this.ioIns.observe(this.$refs.loadMore)
+
+      this.lazyLoadObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          const index = entry.target.dataset.index
+          const postImage = this.$refs.postImages[index]
+          this.loadImages(postImage.images)
+          this.lazyLoadObserver.unobserve(entry.target)
+        }
+      })
+    },
+    initLazyLoad(oldPostLength) {
+      this.$nextTick(() => {
+        this
+          .$refs
+          .posts
+          .slice(oldPostLength)
+          .forEach((el) => {
+            this.lazyLoadObserver.observe(el)
+          })
+      })
+    },
+    loadImages(images) {
+      images.map((img) => {
+        this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_LOADING)
+
+        const el = new Image()
+        el.src = img.thumb
+        el.onload = () => {
+          this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_DONE)
+        }
+      })
     },
   },
 }
@@ -151,5 +194,9 @@ export default {
   text-align: center;
   padding-bottom: 20px;
   color: #BDBDBD;
+}
+
+.post {
+  overflow: hidden;
 }
 </style>

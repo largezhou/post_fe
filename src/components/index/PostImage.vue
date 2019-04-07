@@ -2,24 +2,29 @@
   <!--单张图片 强制直接显示-->
   <a
     v-if="images.length === 1"
-    :href="images[0].thumb"
+    :href="images[0].src"
     target="_blank"
   >
-    <v-img :src="images[0].thumb"/>
+    <v-img
+      :class="{ loading: isLoading(images[0]) }"
+      :src="src(images[0])"
+    />
   </a>
 
   <!--轮播-->
   <v-carousel
     v-else-if="post.layout === 'carousel'"
     class="elevation-0"
-    :height="widescreen ? 600 : 400"
+    height="auto"
+    style="min-height: 300px;"
     :cycle="false"
   >
     <v-carousel-item
       v-for="(img, i) of images"
       class="pointer"
+      :class="{ loading: isLoading(img) }"
       :key="i"
-      :src="img.thumb"
+      :src="src(img)"
       @click.stop="onPreviewImage(i)"
     />
   </v-carousel>
@@ -44,7 +49,8 @@
       >
         <v-img
           class="pointer"
-          :src="img.thumb"
+          :class="{ loading: isLoading(img) }"
+          :src="src(img)"
           aspect-ratio="1"
           @click.stop="onPreviewImage(i)"
         />
@@ -54,7 +60,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapConstants } from '@/libs/constants'
 
 export default {
   name: 'PostImage',
@@ -65,17 +71,51 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      widescreen: (state) => state.app.widescreen,
-    }),
+    ...mapConstants([
+      'IMAGE_LOAD_STATE_INIT',
+      'IMAGE_LOAD_STATE_LOADING',
+      'IMAGE_LOAD_STATE_DONE',
+    ]),
     images() {
       return this.post.images
     },
   },
   methods: {
+    isLoading(img) {
+      return img.loadState === this.IMAGE_LOAD_STATE_LOADING
+    },
     onPreviewImage(index) {
       this.$bus.$emit('preview-image', this.images, index)
+    },
+    src(img) {
+      switch (img.loadState) {
+        case this.IMAGE_LOAD_STATE_LOADING:
+          return require('@/assets/empty_grey_512.png')
+        case this.IMAGE_LOAD_STATE_DONE:
+          return img.thumb
+        default:
+          return ''
+      }
     },
   },
 }
 </script>
+
+<style scoped lang="scss">
+@keyframes loading {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  animation-name: loading;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+</style>
