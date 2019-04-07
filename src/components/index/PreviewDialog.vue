@@ -36,7 +36,6 @@
       fab
       absolute
       right
-      small
       color="pink"
       @click="dialog = false"
     >
@@ -111,7 +110,10 @@ export default {
   }
 }
 
+$t: 30px;
 .clear {
   top: 16px;
+  width: $t;
+  height: $t;
 }
 </style>
