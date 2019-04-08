@@ -1,8 +1,8 @@
 <template>
-  <v-content class="pa-0">
+  <v-content class="pahidebanner-0">
     <v-container
       fluid
-      pahidebanner-0
+      pa-0
     >
       <v-layout>
         <!--<banner/>-->
