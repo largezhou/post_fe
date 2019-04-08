@@ -71,7 +71,9 @@ utils.fixImageOrientation = (file) => {
               break
           }
           // 返回新图片
-          canvas.toBlob((file) => resolve(file), file.type, 0.92)
+          canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name))
+          }, file.type, 0.92)
         } else {
           return resolve(file)
         }
@@ -145,7 +147,9 @@ utils.makeThumb = (file, maxDimensions = 600) => {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0, w, h)
 
-      canvas.toBlob((file) => resolve(file), file.type, 0.92)
+      canvas.toBlob((blob) => {
+        resolve(new File([blob], file.name))
+      }, file.type, 0.92)
     }
   })
 }
