@@ -5,7 +5,8 @@
     :href="images[0].src"
     target="_blank"
   >
-    <v-img
+    <img
+      class="post-single-image"
       :class="{ loading: isLoading(images[0]) }"
       :src="src(images[0])"
     />
@@ -24,9 +25,13 @@
       class="pointer"
       :class="{ loading: isLoading(img) }"
       :key="i"
-      :src="src(img)"
       @click.stop="onPreviewImage(i)"
-    />
+    >
+      <v-img
+        :src="src(img)"
+        aspect-ratio="1"
+      />
+    </v-carousel-item>
   </v-carousel>
 
   <!--九宫格-->
@@ -120,5 +125,9 @@ export default {
   animation-duration: 3s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+}
+
+.post-single-image {
+  width: 100%;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <v-card-text
-    class="headline"
+    class="post-content"
     v-html="html"
   />
 </template>
@@ -18,3 +18,11 @@ export default {
   },
 }
 </script>
+
+<style scoped lang="scss">
+.post-content {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 40px;
+}
+</style>
