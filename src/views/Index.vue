@@ -140,14 +140,13 @@ export default {
       }
     },
     onNewPost(data) {
-      let t = this.$refs.postImages
-
       this.posts.unshift(data)
 
       // 由于加在前面的元素，在 refs 中，也是往后排的
       // 所以，这里手动把前面的新元素，放到 refs 中的前面
       // 用来与 posts 中的索引对应
       this.$nextTick(() => {
+        let t = this.$refs.postImages
         t = [
           t[t.length - 1],
           ...t.slice(0, t.length - 1),
@@ -186,9 +185,8 @@ export default {
     },
     initLazyLoad(oldPostLength) {
       this.$nextTick(() => {
-        this
-          .$refs
-          .postWraps
+        const postWraps = this.$refs.postWraps || []
+        postWraps
           .slice(oldPostLength)
           .forEach((el) => {
             this.lazyLoadObserver.observe(el)
