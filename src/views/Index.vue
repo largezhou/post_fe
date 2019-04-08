@@ -210,10 +210,8 @@ export default {
       this.posts = []
       this.theEnd = false
       this.loading = false
-    },
-    nlToBr(content) {
-      log(1)
-      return content.replace(/\n/g, '<br>')
+
+      this.getPosts()
     },
   },
 }
@@ -229,7 +227,7 @@ export default {
   background: none;
   font-size: 20px;
   text-align: center;
-  padding-bottom: 20px;
+  padding: 20px 0;
   color: #BDBDBD;
 }
 

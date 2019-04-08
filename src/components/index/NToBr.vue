@@ -13,7 +13,6 @@ export default {
   },
   computed: {
     html() {
-      log(111)
       return this.content.replace(/\n/g, '<br>')
     },
   },

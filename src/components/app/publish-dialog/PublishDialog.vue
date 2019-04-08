@@ -225,7 +225,7 @@ export default {
       form.images.forEach((img, i) => {
         fd.append(`images[${i}]`, img.file)
         fd.append(`thumbs[${i}]`, img.thumb)
-        fd.append(`naked[${i}]`, img.naked)
+        fd.append(`naked[${i}]`, img.naked ? 1 : 0)
       })
 
       return fd
