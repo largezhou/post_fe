@@ -128,7 +128,7 @@ export default {
   },
   watch: {
     naked() {
-      this.$bus.$emit('reload-index')
+      this.$bus.$emit('reload-posts')
     },
   },
 }

@@ -128,7 +128,7 @@ export default {
   },
   async created() {
     this.$bus.$on('new-post', this.onNewPost)
-    this.$bus.$on('reload-index', this.onReloadIndex)
+    this.$bus.$on('reload-posts', this.onReloadPosts)
     this.initIntersectionObserver()
     await this.getPosts()
     this.$nextTick(() => {
@@ -137,7 +137,7 @@ export default {
   },
   beforeDestroy() {
     this.$bus.$off('new-post', this.onNewPost)
-    this.$bus.$off('reload-index', this.onReloadIndex)
+    this.$bus.$off('reload-posts', this.onReloadPosts)
   },
   methods: {
     async getPosts(lastId = 0) {
@@ -229,12 +229,19 @@ export default {
         }
       })
     },
-    onReloadIndex() {
+    async onReloadPosts() {
+      // 清空原有数据
       this.posts = []
       this.theEnd = false
       this.loading = false
 
-      this.getPosts()
+      // 清空数据后，先解绑监视器，等重新获取的数据渲染完，再重新绑定
+      // 避免少数情况下，这里和监视器里都同时获取数据
+      this.loadMoreObserver.unobserve(this.$refs.loadMore)
+      await this.getPosts()
+      this.$nextTick(() => {
+        this.loadMoreObserver.observe(this.$refs.loadMore)
+      })
     },
     destroyPost(index) {
       return new Promise((resolve) => {
