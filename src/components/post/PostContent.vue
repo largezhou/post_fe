@@ -26,7 +26,9 @@ export default {
       return str.replace(/\n/g, '<br>')
     },
     doubleSharpToLink(str) {
-      return str.replace(/(#([^#]+)#)/g, '<a href="/tags/$2/posts" data-to="go-to-tag">$1</a>')
+      return str.replace(/#(\s*[^\s#][^#]*)#/g, (match, p1) => {
+        return `<a href="/tags/${p1.trim()}/posts" data-to="go-to-tag">${match}</a>`
+      })
     },
   },
 }
