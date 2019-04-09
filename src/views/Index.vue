@@ -41,7 +41,9 @@
                     :post="p"
                   />
 
-                  <n-to-br :content="p.content"/>
+                  <v-card-text class="post-content">
+                    <post-content :content="p.content"/>
+                  </v-card-text>
 
                   <v-card-actions>
                     <v-card-text class="py-0 px-2">
@@ -94,16 +96,16 @@ import HumanTime from '@/components/HumanTime'
 import PostImage from '@/components/index/PostImage'
 import PreviewDialog from '@/components/index/PreviewDialog'
 import { mapConstants } from '@/libs/constants'
-import NToBr from '@/components/index/NToBr'
 import { mapState } from 'vuex'
 import DeleteConfirmDialog from '@/components/index/DeleteConfirmDialog'
 import LoadingAction from '@/components/LoadingAction'
+import PostContent from '@/components/index/PostContent'
 
 export default {
   components: {
+    PostContent,
     LoadingAction,
     DeleteConfirmDialog,
-    NToBr,
     PreviewDialog,
     PostImage,
     HumanTime,
@@ -275,5 +277,11 @@ export default {
 
 .post {
   overflow: hidden;
+}
+
+.post-content {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 40px;
 }
 </style>

@@ -50,3 +50,5 @@ mock('/posts', 'post', {
     },
   }
 })
+
+mock(/\/posts\/\d+/, 'delete')

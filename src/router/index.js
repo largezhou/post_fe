@@ -55,6 +55,12 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "admin-index" */ '@/views/admin/Index'),
   },
+  {
+    // 标签内容不能全为空
+    path: '/tags/:tagName(\\s*\\S.*)/posts',
+    name: 'showTagPosts',
+    component: () => import(/* webpackChunkName: "show-tag-posts" */ '@/views/TagPosts'),
+  },
 ]
 
 export default new Router({

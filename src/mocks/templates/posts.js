@@ -13,7 +13,7 @@ export default {
         src,
       }))
   },
-  content: () => Random.cparagraph(1, 8),
+  content: () => '#标签1# ' + Random.cparagraph(1, 8) + ' #标签2#',
   layout: () => Random.pick([LAYOUT_NINE_GRID, LAYOUT_NINE_GRID, LAYOUT_CAROUSEL]),
   created_at: '@datetime',
 }
