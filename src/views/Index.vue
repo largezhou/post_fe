@@ -127,7 +127,7 @@ export default {
   async created() {
     this.$bus.$on('new-post', this.onNewPost)
     this.$bus.$on('reload-index', this.onReloadIndex)
-    this.InitIntersectionObserver()
+    this.initIntersectionObserver()
     await this.getPosts()
     this.$nextTick(() => {
       this.loadMoreObserver.observe(this.$refs.loadMore)
@@ -184,7 +184,7 @@ export default {
         : 0
       this.getPosts(lastId)
     },
-    InitIntersectionObserver() {
+    initIntersectionObserver() {
       this.loadMoreObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !this.theEnd) {
