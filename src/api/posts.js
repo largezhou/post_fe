@@ -15,3 +15,10 @@ export function storePost(data) {
     data,
   })
 }
+
+export function destroyPost(id) {
+  return axios({
+    url: `posts/${id}`,
+    method: 'delete',
+  })
+}

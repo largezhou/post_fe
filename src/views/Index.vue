@@ -50,8 +50,18 @@
                         :time="p.created_at"
                       />
                     </v-card-text>
-                    <!--<v-spacer/>
-                    <v-btn icon>
+                    <v-spacer/>
+                    <v-btn
+                      v-if="name"
+                      icon
+                      @click="$bus.$emit('post-delete', i)"
+                    >
+                      <mdi-icon
+                        icon="delete"
+                        class="red--text"
+                      />
+                    </v-btn>
+                    <!--<v-btn icon>
                       <mdi-icon icon="heart-outline"/>
                     </v-btn>-->
                   </v-card-actions>
@@ -65,6 +75,8 @@
 
     <preview-dialog/>
 
+    <delete-confirm-dialog @delete="onDeleteConfirmed"/>
+
     <div ref="loadMore" class="load-more">
       <span v-show="loading">来咯...</span>
       <span v-show="theEnd">没有了...</span>
@@ -74,15 +86,18 @@
 
 <script>
 import Banner from '@/components/index/Banner'
-import { getPosts } from '@/api/posts'
+import { destroyPost, getPosts } from '@/api/posts'
 import HumanTime from '@/components/HumanTime'
 import PostImage from '@/components/index/PostImage'
 import PreviewDialog from '@/components/index/PreviewDialog'
 import { mapConstants } from '@/libs/constants'
 import NToBr from '@/components/index/NToBr'
+import { mapState } from 'vuex'
+import DeleteConfirmDialog from '@/components/index/DeleteConfirmDialog'
 
 export default {
   components: {
+    DeleteConfirmDialog,
     NToBr,
     PreviewDialog,
     PostImage,
@@ -100,6 +115,9 @@ export default {
       'IMAGE_LOAD_STATE_LOADING',
       'IMAGE_LOAD_STATE_DONE',
     ]),
+    ...mapState({
+      name: (state) => state.user.name,
+    }),
   },
   async created() {
     this.$bus.$on('new-post', this.onNewPost)
@@ -210,6 +228,12 @@ export default {
       this.loading = false
 
       this.getPosts()
+    },
+    async onDeleteConfirmed(index) {
+      const p = this.posts[index]
+      await destroyPost(p.id)
+      this.posts.splice(index, 1)
+      this.$snackbar('删掉了')
     },
   },
 }
