@@ -51,16 +51,16 @@
                       />
                     </v-card-text>
                     <v-spacer/>
-                    <v-btn
+                    <loading-action
                       v-if="name"
                       icon
-                      @click="$bus.$emit('post-delete', i)"
+                      :action="() => destroyPost(i)"
                     >
                       <mdi-icon
                         icon="delete"
                         class="red--text"
                       />
-                    </v-btn>
+                    </loading-action>
                     <!--<v-btn icon>
                       <mdi-icon icon="heart-outline"/>
                     </v-btn>-->
@@ -75,7 +75,10 @@
 
     <preview-dialog/>
 
-    <delete-confirm-dialog @delete="onDeleteConfirmed"/>
+    <delete-confirm-dialog
+      @confirmed="onDeleteConfirmed"
+      @closed="onDeleteCanceled"
+    />
 
     <div ref="loadMore" class="load-more">
       <span v-show="loading">来咯...</span>
@@ -94,9 +97,11 @@ import { mapConstants } from '@/libs/constants'
 import NToBr from '@/components/index/NToBr'
 import { mapState } from 'vuex'
 import DeleteConfirmDialog from '@/components/index/DeleteConfirmDialog'
+import LoadingAction from '@/components/LoadingAction'
 
 export default {
   components: {
+    LoadingAction,
     DeleteConfirmDialog,
     NToBr,
     PreviewDialog,
@@ -229,11 +234,26 @@ export default {
 
       this.getPosts()
     },
-    async onDeleteConfirmed(index) {
-      const p = this.posts[index]
-      await destroyPost(p.id)
-      this.posts.splice(index, 1)
-      this.$snackbar('删掉了')
+    destroyPost(index) {
+      return new Promise((resolve) => {
+        this.destroyResolve = resolve
+        this.$bus.$emit('post-delete')
+      })
+        .then(async (confirmed) => {
+          if (confirmed) {
+            try {
+              await destroyPost(this.posts[index].id)
+              this.posts.splice(index, 1)
+              this.$snackbar('删掉了')
+            } catch (e) {}
+          }
+        })
+    },
+    onDeleteConfirmed() {
+      this.destroyResolve(true)
+    },
+    onDeleteCanceled() {
+      this.destroyResolve(false)
     },
   },
 }

@@ -29,7 +29,6 @@ export default {
   name: 'DeleteConfirmDialog',
   data: () => ({
     dialog: false,
-    index: -1,
   }),
   created() {
     this.$bus.$on('post-delete', this.onPostDelete)
@@ -38,19 +37,18 @@ export default {
     this.$bus.$off('post-delete', this.onPostDelete)
   },
   methods: {
-    onPostDelete(index) {
-      this.index = index
+    onPostDelete() {
       this.dialog = true
     },
     onConfirm() {
-      this.$emit('delete', this.index)
+      this.$emit('confirmed')
       this.dialog = false
     },
   },
   watch: {
     dialog(newVal) {
       if (!newVal) {
-        this.index = -1
+        this.$emit('closed')
       }
     },
   },
