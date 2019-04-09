@@ -5,24 +5,29 @@ import postTmpl, {
 import dayjs from 'dayjs'
 import utils from '@/libs/utils'
 
-mock(/\/posts\/?(\?.*)?/, 'get', {
-  data: {
-    'data|10': [postTmpl],
-    meta: {
-      per_page: 10,
+export const getPostsArgs = [
+  {
+    data: {
+      'data|10': [postTmpl],
+      meta: {
+        per_page: 10,
+      },
     },
   },
-}, (tmpl, options) => {
-  const { last_id } = utils.queryFromUrl(options.url)
-  if (last_id > 10) {
-    return {
-      data: {
-        'data|1-9': tmpl.data['data|10'],
-        meta: tmpl.data.meta,
-      },
-    }
-  }
-})
+  // (tmpl, options) => {
+  //   const { last_id } = utils.queryFromUrl(options.url)
+  //   if (last_id > 10) {
+  //     return {
+  //       data: {
+  //         'data|1-9': tmpl.data['data|10'],
+  //         meta: tmpl.data.meta,
+  //       },
+  //     }
+  //   }
+  // },
+]
+
+mock(/\/posts\/?(\?.*)?/, 'get', ...getPostsArgs)
 
 mock('/posts', 'post', {
   data: postTmpl,

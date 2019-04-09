@@ -1,6 +1,9 @@
 <template>
   <v-content>
-    <v-container fluid>
+    <v-container
+      fluid
+      pa-0
+    >
       <v-layout
         align-center
         justify-center
