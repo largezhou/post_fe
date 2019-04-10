@@ -16,7 +16,7 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline">
+      <v-card-title class="headline pb-0">
         <span>Emoji</span>
         <v-btn
           flat
@@ -27,7 +27,7 @@
         </v-btn>
       </v-card-title>
 
-      <v-card-text>
+      <v-card-text class="pt-0">
         <v-tabs
           show-arrows
           v-model="curTab"
@@ -39,26 +39,27 @@
           >
             {{ EMOJI_CAT_MAP[cat] }}
           </v-tab>
-
-          <v-tabs-items class="tabs-items">
-            <v-tab-item
-              v-for="cat of emojiCats"
-              :key="cat"
+        </v-tabs>
+        <div class="tabs-items">
+          <div
+            v-for="cat of emojiCats"
+            :key="cat"
+          >
+            <v-card
+              v-show="curCat === cat"
+              flat
+              class="emojis"
             >
-              <v-card
-                flat
-                class="emojis"
-              >
-              <span
+              <div
                 class="pa-1"
                 v-for="emoji of emojisByCat(emojiCats[curTab])"
                 :key="emoji"
                 @click="onPick(emoji)"
-              >{{ emoji }}</span>
-              </v-card>
-            </v-tab-item>
-          </v-tabs-items>
-        </v-tabs>
+              >{{ emoji }}
+              </div>
+            </v-card>
+          </div>
+        </div>
       </v-card-text>
 
       <v-card-actions>
@@ -107,10 +108,10 @@ export default {
   },
   methods: {
     async getEmojisIfEmpty(cat) {
-      if (!this.catEmojis[this.curCat]) {
+      if (!this.catEmojis[cat]) {
         try {
-          const { data } = await getEmojis(this.curCat)
-          this.$set(this.catEmojis, this.curCat, data)
+          const { data } = await getEmojis(cat)
+          this.$set(this.catEmojis, cat, data)
         } catch (e) {}
       }
     },
@@ -140,14 +141,20 @@ export default {
 
 <style scoped lang="scss">
 .tabs-items {
-  height: 400px;
+  height: 250px;
   overflow-y: auto;
 }
 
 .emojis {
   font-size: 20px;
-  word-break: break-all;
   cursor: pointer;
   user-select: none;
+
+  div {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+  }
 }
 </style>
