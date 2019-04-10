@@ -245,8 +245,10 @@ export default {
       this.form.content = c.slice(0, index) + emoji + c.slice(index)
       this.$nextTick(() => {
         const t = emoji.length + index
+        // hack...
         input.focus()
         input.setSelectionRange(t, t)
+        input.blur()
       })
     },
   },
