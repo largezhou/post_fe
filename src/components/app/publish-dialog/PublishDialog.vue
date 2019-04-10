@@ -45,7 +45,10 @@
                     no-resize
                   />
 
-                  <emoji-picker @pick="onEmojiPicked"/>
+                  <emoji-picker
+                    @pick="onEmojiPicked"
+                    @delete="onEmojiDelete"
+                  />
                 </v-flex>
                 <v-flex xs12>
                   <v-layout>
@@ -248,7 +251,6 @@ export default {
         // hack...
         input.focus()
         input.setSelectionRange(t, t)
-        input.blur()
       })
     },
   },

@@ -1,23 +1,29 @@
 <template>
-  <v-dialog
-    v-model="dialog"
+  <div
     width="500"
     scrollable
     @keydown.esc="dialog = false"
   >
-    <template v-slot:activator="{ on }">
-      <v-btn
-        style="font-size: 24px;"
-        icon
-        :ripple="false"
-        class="ma-0"
-        v-on="on"
-      >😀</v-btn>
-    </template>
-
-    <v-card>
-      <v-card-title class="headline pb-0">
-        <span>Emoji</span>
+    <v-btn
+      v-show="!dialog"
+      style="font-size: 24px;"
+      icon
+      :ripple="false"
+      class="ma-0"
+      @click="dialog = true"
+    >😀</v-btn>
+    <v-card
+      v-show="dialog"
+      flat
+    >
+      <v-card-actions class="pa-0">
+        <v-btn
+          flat
+          icon
+          @click="dialog = false"
+        >
+          <mdi-icon icon="close"/>
+        </v-btn>
         <v-btn
           flat
           icon
@@ -25,9 +31,11 @@
         >
           <mdi-icon :icon="lock ? 'lock' : 'lock-open-outline'"/>
         </v-btn>
-      </v-card-title>
+        <v-spacer/>
+        <span class="headline">Emoji</span>
+      </v-card-actions>
 
-      <v-card-text class="pt-0">
+      <v-card-text class="pa-0">
         <v-tabs
           show-arrows
           v-model="curTab"
@@ -61,17 +69,8 @@
           </div>
         </div>
       </v-card-text>
-
-      <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          color="primary"
-          flat
-          @click="dialog = false"
-        >好的</v-btn>
-      </v-card-actions>
     </v-card>
-  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -81,12 +80,12 @@ import { getEmojis } from '@/api/emojis'
 export default {
   name: 'EmojiPicker',
   data: () => ({
-    // 为 true 表示弹框已经显示过一次了，
-    // 因为弹框隐藏时，如果渲染了所有 tags ，滚动会有问题
+    // 为 true 表示已经显示过一次了，
+    // 因为隐藏时，如果渲染了所有 tags ，滚动会有问题
     firstShow: false,
     dialog: false,
     // 是否选择后不关闭弹框
-    lock: false,
+    lock: true,
     curTab: 0,
     // 按分类存储 emoji
     catEmojis: {},
@@ -141,7 +140,7 @@ export default {
 
 <style scoped lang="scss">
 .tabs-items {
-  height: 250px;
+  height: 150px;
   overflow-y: auto;
 }
 
