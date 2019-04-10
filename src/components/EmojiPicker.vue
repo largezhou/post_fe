@@ -28,7 +28,13 @@
           <mdi-icon :icon="lock ? 'lock' : 'lock-open-outline'"/>
         </v-btn>
         <v-spacer/>
-        <span class="headline">Emoji</span>
+        <v-btn
+          flat
+          icon
+          @click="forceReload"
+        >
+          <mdi-icon icon="refresh"/>
+        </v-btn>
       </v-card-actions>
 
       <v-card-text class="pa-0">
@@ -118,6 +124,19 @@ export default {
       if (!this.lock) {
         this.dialog = false
       }
+    },
+    async forceReloadEmojis(cat) {
+      try {
+        const { data } = await getEmojis(cat, {
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        this.$set(this.catEmojis, cat, data)
+      } catch (e) {}
+    },
+    forceReload() {
+      this.forceReloadEmojis(this.curCat)
     },
   },
   watch: {
