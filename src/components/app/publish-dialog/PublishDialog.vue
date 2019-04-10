@@ -45,10 +45,7 @@
                     no-resize
                   />
 
-                  <emoji-picker
-                    @pick="onEmojiPicked"
-                    @delete="onEmojiDelete"
-                  />
+                  <emoji-picker @pick="onEmojiPicked"/>
                 </v-flex>
                 <v-flex xs12>
                   <v-layout>

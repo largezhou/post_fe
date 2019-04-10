@@ -1,9 +1,5 @@
 <template>
-  <div
-    width="500"
-    scrollable
-    @keydown.esc="dialog = false"
-  >
+  <div>
     <v-btn
       v-show="!dialog"
       style="font-size: 24px;"
