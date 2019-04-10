@@ -123,8 +123,12 @@ utils.queryFromUrl = (url) => {
  * @param maxDimensions 最大长宽，默认为 600
  * @return {Promise<any>}
  */
-utils.makeThumb = (file, maxDimensions = 600) => {
+utils.makeThumb = (file, maxDimensions = 1200) => {
   return new Promise((resolve, reject) => {
+    // 500 KB 以下不压缩
+    if (file.size < 500 * 1024) {
+      return resolve(file)
+    }
     // 获取图片（加载图片是为了获取图片的宽高）
     const img = new Image()
     img.src = window.URL.createObjectURL(file)
@@ -135,7 +139,7 @@ utils.makeThumb = (file, maxDimensions = 600) => {
       let h = img.height
 
       if (w <= maxDimensions && h <= maxDimensions) {
-        resolve(file)
+        return resolve(file)
       }
 
       const ratio = maxDimensions / (w > h ? w : h)
@@ -146,6 +150,7 @@ utils.makeThumb = (file, maxDimensions = 600) => {
       canvas.height = h
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0, w, h)
+      document.body.appendChild(canvas)
 
       canvas.toBlob((blob) => {
         resolve(new File([blob], file.name))

@@ -29,7 +29,7 @@ const app = new Vue({
   render: (h) => h(App),
 }).$mount('#app')
 
-if (process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV === 'development') {
   window.app = app
   window.Vue = Vue
   window.utils = utils
