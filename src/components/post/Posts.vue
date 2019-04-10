@@ -269,5 +269,6 @@ export default {
   font-size: 24px;
   font-weight: 400;
   line-height: 40px;
+  word-break: break-all;
 }
 </style>
