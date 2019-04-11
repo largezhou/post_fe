@@ -63,7 +63,7 @@
 
     <preview-dialog/>
 
-    <delete-confirm-dialog
+    <post-delete-confirm-dialog
       @confirmed="onDeleteConfirmed"
       @closed="onDeleteCanceled"
     />
@@ -77,7 +77,7 @@ import PostImage from '@/components/post/PostImage'
 import PreviewDialog from '@/components/post/PreviewDialog'
 import { mapConstants } from '@/libs/constants'
 import { mapState } from 'vuex'
-import DeleteConfirmDialog from '@/components/post/DeleteConfirmDialog'
+import PostDeleteConfirmDialog from '@/components/post/PostDeleteConfirmDialog'
 import LoadingAction from '@/components/LoadingAction'
 import PostContent from '@/components/post/PostContent'
 
@@ -86,7 +86,7 @@ export default {
   components: {
     PostContent,
     LoadingAction,
-    DeleteConfirmDialog,
+    PostDeleteConfirmDialog,
     PreviewDialog,
     PostImage,
     HumanTime,

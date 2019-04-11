@@ -33,19 +33,16 @@
             <v-container grid-list-xs>
               <v-layout wrap>
                 <v-flex xs12>
-                  <v-textarea
+                  <pd-content-edit
                     v-model="form.content"
                     v-validate="rules.content"
                     autofocus
                     ref="content"
                     data-vv-name="content"
                     :error-messages="errors.collect('content')"
-                    name="content"
                     label="说点啥呢，，，"
                     no-resize
                   />
-
-                  <emoji-picker @pick="onEmojiPicked"/>
                 </v-flex>
                 <v-flex xs12>
                   <v-layout>
@@ -115,12 +112,12 @@ import PdImageEdit from './PdImageEdit'
 import PdImagesSelect from './PdImagesSelect'
 import { storePost } from '@/api/posts'
 import LoadingAction from '@/components/LoadingAction'
-import EmojiPicker from '@/components/EmojiPicker'
+import PdContentEdit from '@/components/app/publish-dialog/PdContentEdit'
 
 export default {
   name: 'PublishDialog',
   components: {
-    EmojiPicker,
+    PdContentEdit,
     LoadingAction,
     PdImagesSelect,
     PdImageEdit,
@@ -237,18 +234,6 @@ export default {
       })
 
       return fd
-    },
-    onEmojiPicked(emoji) {
-      const input = this.$refs.content.$refs.input
-      const index = input.selectionStart
-      const c = this.form.content
-      this.form.content = c.slice(0, index) + emoji + c.slice(index)
-      this.$nextTick(() => {
-        const t = emoji.length + index
-        // hack...
-        input.focus()
-        input.setSelectionRange(t, t)
-      })
     },
   },
 }

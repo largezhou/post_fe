@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: 'DeleteConfirmDialog',
+  name: 'PostDeleteConfirmDialog',
   data: () => ({
     dialog: false,
   }),
