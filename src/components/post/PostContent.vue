@@ -42,7 +42,7 @@ export default {
 
           const text = str.slice(lastStrIndex, index)
           if (text) {
-            span.appendChild(document.createTextNode(text))
+            span.insertAdjacentHTML('beforeend', text)
           }
           const Comp = Vue.extend({
             router,
@@ -59,7 +59,7 @@ export default {
 
       // 补上最后部分文字
       if (lastStrIndex !== str.length) {
-        span.appendChild(document.createTextNode(str.slice(lastStrIndex)))
+        span.insertAdjacentHTML('beforeend', str.slice(lastStrIndex))
       }
     },
   },
