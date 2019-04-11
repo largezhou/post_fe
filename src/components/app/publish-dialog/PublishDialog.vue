@@ -36,7 +36,6 @@
                   <pd-content-edit
                     v-model="form.content"
                     v-validate="rules.content"
-                    autofocus
                     ref="content"
                     data-vv-name="content"
                     :error-messages="errors.collect('content')"

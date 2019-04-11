@@ -7,3 +7,11 @@ export function getTagPosts(tagName, params) {
     params,
   })
 }
+
+export function getTags(params) {
+  return axios({
+    url: 'tags',
+    method: 'get',
+    params,
+  })
+}
