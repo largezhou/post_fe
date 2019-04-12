@@ -80,6 +80,7 @@ export default {
       'IMAGE_LOAD_STATE_INIT',
       'IMAGE_LOAD_STATE_LOADING',
       'IMAGE_LOAD_STATE_DONE',
+      'IMAGE_LOAD_STATE_ERROR',
 
       'LAYOUT_NINE_GRID',
       'LAYOUT_CAROUSEL',
@@ -98,6 +99,7 @@ export default {
     src(img) {
       switch (img.loadState) {
         case this.IMAGE_LOAD_STATE_LOADING:
+        case this.IMAGE_LOAD_STATE_ERROR:
           return require('@/assets/empty_grey_512.png')
         case this.IMAGE_LOAD_STATE_DONE:
           return img.thumb
