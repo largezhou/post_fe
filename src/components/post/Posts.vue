@@ -104,6 +104,7 @@ export default {
     ...mapConstants([
       'IMAGE_LOAD_STATE_LOADING',
       'IMAGE_LOAD_STATE_DONE',
+      'IMAGE_LOAD_STATE_ERROR',
     ]),
     ...mapState({
       name: (state) => state.user.name,
@@ -209,6 +210,10 @@ export default {
         el.src = img.thumb
         el.onload = () => {
           this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_DONE)
+        }
+        el.onerror = () => {
+          this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_ERROR)
+          log('图片没了')
         }
       })
     },

@@ -6,6 +6,7 @@ export const MAX_IMAGES_COUNT = 9
 export const IMAGE_LOAD_STATE_INIT = 'init'
 export const IMAGE_LOAD_STATE_LOADING = 'loading'
 export const IMAGE_LOAD_STATE_DONE = 'done'
+export const IMAGE_LOAD_STATE_ERROR = 'error'
 
 export const EMOJI_CAT_PEOPLE = 'people'
 export const EMOJI_CAT_NATURE = 'nature'
