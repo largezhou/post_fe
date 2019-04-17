@@ -123,7 +123,7 @@ export default {
     PdPreviewLayout,
   },
   data: () => ({
-    dialog: true,
+    dialog: false,
     form: {
       content: '',
       images: [],

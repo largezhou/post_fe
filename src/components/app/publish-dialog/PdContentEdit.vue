@@ -65,24 +65,7 @@ export default {
       q: '',
       hot: null, // 缓存搜索内容为空时的热门标签
       curIndex: -1, // 当前聚焦的选项
-      data: [
-        {
-          id: 1,
-          name: '标签 1',
-        },
-        {
-          id: 2,
-          name: '标签 2',
-        },
-        {
-          id: 3,
-          name: '标签 3',
-        },
-        {
-          id: 4,
-          name: '标签 4',
-        },
-      ],
+      data: [],
     },
   }),
   created() {
@@ -137,6 +120,7 @@ export default {
       this.tagsList.show = false
       this.tagsList.q = ''
       this.tagsList.curIndex = -1
+      this.tagsList.data = []
       this.debounceGetTags.cancel()
     },
     onFocus() {
@@ -195,19 +179,24 @@ export default {
         return
       }
 
-      const q = this.tagsList.q
-      const { data } = await getTags({
-        q,
-        hot: q ? 0 : 1,
-      })
+      const t = this.tagsList
+      const q = t.q
 
-      log(
-        {
-          q,
-          hot: q ? 0 : 1,
-        },
-        data,
-      )
+      // 如果没有关键词，并且热门标签不是 null（说明请求过，可能为空数组）
+      if (!q && (t.hot !== null)) {
+        t.data = t.hot
+        return
+      }
+      // 如果没有关键词，则获取 热门标签
+      const hot = !q
+
+      const { data } = await getTags({ q, hot })
+      t.data = data
+      if (hot) {
+        t.hot = data
+      }
+
+      log({ q, hot }, data)
     },
     onSelectTag(index) {
       const tagName = this.tagsList.data[index].name
@@ -241,6 +230,14 @@ export default {
       if (!utils.clickedInEl(this.$refs.content.$el, e.clientX, e.clientY)) {
         this.hideTagsList()
       }
+    },
+  },
+  watch: {
+    'tagsList.q'() {
+      this.debounceGetTags()
+    },
+    'tagsList.show'(newVal) {
+      newVal && this.debounceGetTags()
     },
   },
 }
