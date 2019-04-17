@@ -46,7 +46,7 @@ import { VTextarea } from 'vuetify/lib'
 import utils from '@/libs/utils'
 import { getTags } from '@/api/tags'
 import _debounce from 'lodash/debounce'
-import { ClickOutside } from '@/directives/ClickOutside'
+import ClickOutside from '@/directives/ClickOutside'
 
 export default {
   name: 'PdContentEdit',

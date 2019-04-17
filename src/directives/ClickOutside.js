@@ -8,7 +8,7 @@ const directive = (e, el, binding) => {
 
 let onClick
 
-export const ClickOutside = {
+export default {
   inserted(el, binding) {
     onClick = (e) => {
       return directive(e, el, binding)
