@@ -21,3 +21,10 @@
     caret-color: #82b1ff !important;
   }
 }
+
+.content-editor-cursor {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  z-index: -9999 !important;
+}
