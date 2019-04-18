@@ -84,6 +84,7 @@ export default {
       this.tagsList.loading = true
       _t()
     }
+    this.debounceGetTags.cancel = _t.cancel
     // 由于多个事件会触发显示列表，比如失焦后用鼠标点击，会同时触发点击和聚焦，所以防抖一下
     this.debounceShowTagsList = _debounce(this.showTagsList, 100)
   },
@@ -214,7 +215,7 @@ export default {
 
       this.$emit('input', part1 + part2)
       this.hideTagsList()
-      this.setCursorPos(part1.length + sharpPos)
+      this.setCursorPos(part1.length)
     },
     focus() {
       this.input.focus()
@@ -225,6 +226,7 @@ export default {
      * @param pos
      */
     setCursorPos(pos) {
+      window.t = this
       this.$nextTick(() => {
         this.focus()
         this.input.setSelectionRange(pos, pos)
