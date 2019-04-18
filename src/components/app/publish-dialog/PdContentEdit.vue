@@ -6,7 +6,6 @@
       @keydown="onKeyDown"
       @mouseup="onMouseUp"
       @focus="onFocus"
-      @blur="onBlur"
       ref="content"
       v-bind="$props"
     />
