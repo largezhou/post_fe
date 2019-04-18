@@ -63,12 +63,13 @@ export default {
       y: 0,
       show: false,
       q: '',
-      hot: null, // 缓存搜索内容为空时的热门标签
       curIndex: -1, // 当前聚焦的选项
       data: [],
     },
   }),
   created() {
+    // 备份该数据，用来隐藏标签列表时，重置数据用
+    this.tagsListBak = JSON.stringify(this.tagsList)
     this.debounceGetTags = _debounce(this.getTags, 500)
     // 由于多个事件会触发显示列表，比如失焦后用鼠标点击，会同时触发点击和聚焦，所以防抖一下
     this.debounceShowTagsList = _debounce(this.showTagsList, 100)
@@ -117,10 +118,7 @@ export default {
       this.tagsList.show = true
     },
     hideTagsList() {
-      this.tagsList.show = false
-      this.tagsList.q = ''
-      this.tagsList.curIndex = -1
-      this.tagsList.data = []
+      this.tagsList = JSON.parse(this.tagsListBak)
       this.debounceGetTags.cancel()
     },
     onFocus() {
@@ -182,21 +180,8 @@ export default {
       const t = this.tagsList
       const q = t.q
 
-      // 如果没有关键词，并且热门标签不是 null（说明请求过，可能为空数组）
-      if (!q && (t.hot !== null)) {
-        t.data = t.hot
-        return
-      }
-      // 如果没有关键词，则获取 热门标签
-      const hot = !q
-
-      const { data } = await getTags({ q, hot })
+      const { data } = await getTags({ q })
       t.data = data
-      if (hot) {
-        t.hot = data
-      }
-
-      log({ q, hot }, data)
     },
     onSelectTag(index) {
       const tagName = this.tagsList.data[index].name
