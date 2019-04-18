@@ -194,7 +194,10 @@ export default {
       const q = t.q
 
       try {
-        const { data } = await getTags({ q })
+        const { data } = await getTags({
+          q,
+          hot: 1,
+        })
         t.data = data
       } finally {
         this.tagsList.loading = false
