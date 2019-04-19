@@ -19,7 +19,7 @@
         xs12
         :data-index="i"
       >
-        <v-card>
+        <v-card class="post-card">
 
           <post-image
             ref="postImages"
@@ -289,5 +289,9 @@ export default {
   font-weight: 400;
   line-height: 40px;
   word-break: break-all;
+}
+
+.post-card {
+  background: rgba(255, 255, 255, 0.80);
 }
 </style>

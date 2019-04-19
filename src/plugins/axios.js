@@ -42,7 +42,7 @@ _axios.interceptors.response.use(
           utils.snackbar(`服务器错误 (code: ${res.status})`)
       }
     } else {
-      utils.snackbar('请求错误')
+      utils.snackbar('请求失败')
     }
     return Promise.reject(err)
   },

@@ -38,6 +38,7 @@ import { mapState } from 'vuex'
 import LoginDialog from '@/components/app/LoginDialog'
 import FloatingActions from '@/components/FloatingActions'
 import PublishDialog from '@/components/app/publish-dialog/PublishDialog'
+import { getConfigs } from '@/api/configs'
 
 export default {
   components: {
@@ -52,6 +53,9 @@ export default {
       widescreen: (state) => state.app.widescreen,
     }),
   },
+  created() {
+    this.getConfigs()
+  },
   methods: {
     onResize() {
       const width = window.innerWidth
@@ -61,6 +65,10 @@ export default {
       if (widescreen !== this.widescreen) {
         this.$store.commit('CHANGE_WIDESCREEN', widescreen)
       }
+    },
+    async getConfigs() {
+      const { data } = await getConfigs()
+      this.$store.commit('SET_CONFIGS', data)
     },
   },
 }

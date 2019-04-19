@@ -4,6 +4,7 @@ export default {
     widescreen: true,
     mobile: navigator.userAgent.indexOf('Mobile') !== -1,
     naked: localStorage.getItem('naked') || false,
+    configs: null,
   },
   mutations: {
     CHANGE_SLIDER_BAR(state, status) {
@@ -18,6 +19,9 @@ export default {
     CHANGE_NAKED(state, status) {
       state.naked = status
       localStorage.setItem('naked', status ? 1 : '')
+    },
+    SET_CONFIGS(state, configs) {
+      state.configs = configs
     },
   },
 }
