@@ -150,7 +150,6 @@ utils.makeThumb = (file, maxDimensions = 1200) => {
       canvas.height = h
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0, w, h)
-      document.body.appendChild(canvas)
 
       canvas.toBlob((blob) => {
         resolve(new File([blob], file.name))
