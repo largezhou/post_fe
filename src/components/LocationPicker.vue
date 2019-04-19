@@ -115,51 +115,77 @@ export default {
     onClose() {
       this.dialog = false
     },
-    getList(page = this.page) {
-      /* eslint-disable */
+    async getList(page = this.page) {
       this.loading = true
-      AMap.plugin('AMap.Geolocation', () => {
-        const geolocation = new AMap.Geolocation({
-          enableHighAccuracy: true,
-        })
-        geolocation.getCurrentPosition((status, result) => {
-          if (status === 'complete') {
-            this.onLocateComplete(result, page)
-          } else {
-            this.$snackbar(`定位失败 (${result.message})`)
-            this.loading = false
-          }
-        })
-      })
-      /* eslint-enable */
-    },
-    onLocateComplete(result, page) {
-      /* eslint-disable */
-      this.loc = result.addressComponent
-      const p = result.position
+
+      let posRes
+      try {
+        posRes = await this.getCurrentPosition()
+      } catch (e) {
+        this.$snackbar(`定位失败 (${e.message})`)
+        this.loading = false
+        return
+      }
+
+      this.loc = posRes.addressComponent
+      const p = posRes.position
       this.loc.lng = p.lng
       this.loc.lat = p.lat
       const center = [p.lng, p.lat]
 
-      AMap.service(['AMap.PlaceSearch'], () => {
-        //构造地点查询类
-        const placeSearch = new AMap.PlaceSearch({
-          type: MAP_SEARCH_TYPE_ALL,
-          pageSize: PAGE_SIZE,
-          pageIndex: page,
-        })
+      let searchRes
+      try {
+        searchRes = await this.placeSearch(center, page)
+      } catch (e) {
+        this.$snackbar('搜索失败')
+        this.loading = false
+        return
+      }
 
-        placeSearch.searchNearBy('', center, 100, (status, result) => {
-          if (status === 'complete') {
-            const l = result.poiList
-            this.page = l.currentIndex
-            this.data = l.pois
-          }
+      this.loading = false
 
-          this.loading = false
+      const l = searchRes.poiList
+      this.page = l.currentIndex
+      this.data = l.pois
+    },
+    getCurrentPosition() {
+      return new Promise((resolve, reject) => {
+        /* eslint-disable */
+        AMap.plugin('AMap.Geolocation', () => {
+          const geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,
+          })
+          geolocation.getCurrentPosition((status, result) => {
+            if (status === 'complete') {
+              resolve(result)
+            } else {
+              reject(result)
+            }
+          })
         })
+        /* eslint-enable */
       })
-      /* eslint-enable */
+    },
+    placeSearch(center, page) {
+      return new Promise((resolve, reject) => {
+        /* eslint-disable */
+        AMap.service(['AMap.PlaceSearch'], () => {
+          const placeSearch = new AMap.PlaceSearch({
+            type: MAP_SEARCH_TYPE_ALL,
+            pageSize: PAGE_SIZE,
+            pageIndex: page,
+          })
+
+          placeSearch.searchNearBy('', center, 100, (status, result) => {
+            if (status === 'complete') {
+              resolve(result)
+            } else {
+              reject(result)
+            }
+          })
+        })
+        /* eslint-enable */
+      })
     },
     onPick(poi) {
       if (poi) {
