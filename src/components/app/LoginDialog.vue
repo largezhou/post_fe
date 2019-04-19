@@ -3,7 +3,7 @@
     v-model="dialog"
     max-width="300"
     @keydown.esc="dialog = false"
-    @keydown.enter="onLogin"
+    @keydown.enter="$refs.loginBtn.onAction"
   >
     <v-card>
       <v-card-title>
@@ -43,6 +43,7 @@
           @click="dialog = false"
         >取消</v-btn>
         <loading-action
+          ref="loginBtn"
           flat
           :action="onLogin"
         >
