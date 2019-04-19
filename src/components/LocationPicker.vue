@@ -46,16 +46,6 @@
               </v-list-tile-content>
             </v-list-tile>
 
-            <v-list-tile v-show="loading">
-              <v-list-tile-content>
-                <v-list-tile-title
-                  class="grey--text"
-                  style="text-align: center;"
-                >别急，，，
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-
             <v-list-tile
               v-for="item of data"
               :class="{ 'grey lighten-4': value && value.id === item.id }"
@@ -65,6 +55,17 @@
               <v-list-tile-content>
                 <v-list-tile-title>{{ item.name }}</v-list-tile-title>
                 <v-list-tile-sub-title>{{ fullDistrict + item.address }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+
+            <v-list-tile ref="loadMore">
+              <v-list-tile-content>
+                <v-list-tile-title
+                  class="grey--text"
+                  style="text-align: center;"
+                >
+                  {{ theEnd ? '没有了，，，' : '来了，，，' }}
+                </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -88,6 +89,7 @@ export default {
     data: [],
     loc: null,
     loading: false,
+    theEnd: false,
   }),
   computed: {
     ...mapState({
@@ -108,14 +110,24 @@ export default {
       default: () => ({}),
     },
   },
-  created() {
-    window.t = this
+  mounted() {
+    this.loadMoreObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !this.theEnd) {
+        this.getList(this.page + 1)
+      } else if (this.theEnd) {
+        this.loadMoreObserver.unobserve(entry.target)
+      }
+    })
   },
   methods: {
     onClose() {
       this.dialog = false
     },
     async getList(page = this.page) {
+      if (this.loading) {
+        return
+      }
+
       this.loading = true
 
       let posRes
@@ -137,7 +149,11 @@ export default {
       try {
         searchRes = await this.placeSearch(center, page)
       } catch (e) {
-        this.$snackbar('搜索失败')
+        if (e === 'no_data') {
+          this.theEnd = true
+        } else {
+          this.$snackbar('搜索失败')
+        }
         this.loading = false
         return
       }
@@ -145,8 +161,12 @@ export default {
       this.loading = false
 
       const l = searchRes.poiList
-      this.page = l.currentIndex
-      this.data = l.pois
+      this.page = l.pageIndex
+      this.data.push(...l.pois)
+
+      if (l.pois.length < PAGE_SIZE) {
+        this.theEnd = true
+      }
     },
     getCurrentPosition() {
       return new Promise((resolve, reject) => {
@@ -180,7 +200,7 @@ export default {
             if (status === 'complete') {
               resolve(result)
             } else {
-              reject(result)
+              reject(status)
             }
           })
         })
@@ -196,13 +216,17 @@ export default {
     },
   },
   watch: {
-    dialog(newVal) {
+    async dialog(newVal) {
       if (newVal) {
-        this.getList()
+        await this.getList()
+        this.$nextTick(() => {
+          this.loadMoreObserver.observe(this.$refs.loadMore.$el)
+        })
       } else {
         this.page = 1
         this.data = []
         this.loc = null
+        this.theEnd = false
       }
     },
   },
