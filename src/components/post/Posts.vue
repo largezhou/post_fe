@@ -36,6 +36,20 @@
                 prefix="发布于 "
                 :time="p.created_at"
               />
+              <span
+                v-if="p.addr"
+                class="ml-2"
+              >
+                <span>发布于 </span>
+                <v-tooltip top>
+                  <a
+                    :href="'https://www.amap.com/search?query=' + p.addr.full_addr"
+                    target="_blank"
+                    slot="activator"
+                  >{{ p.addr.name }}</a>
+                  <span>{{ p.addr.full_addr }}</span>
+                </v-tooltip>
+              </span>
             </v-card-text>
             <v-spacer/>
             <loading-action
@@ -236,7 +250,7 @@ export default {
         this.destroyResolve = resolve
         this.$bus.$emit('post-delete')
       })
-        .then(async (confirmed) => {
+        .then(async(confirmed) => {
           if (confirmed) {
             try {
               await destroyPost(this.posts[index].id)
