@@ -42,6 +42,10 @@
                     label="说点啥呢，，，"
                     no-resize
                   />
+                  <location-picker
+                    v-model="form.loc"
+                    class="mt-2"
+                  />
                 </v-flex>
                 <v-flex xs12>
                   <v-layout>
@@ -112,10 +116,12 @@ import PdImagesSelect from './PdImagesSelect'
 import { storePost } from '@/api/posts'
 import LoadingAction from '@/components/LoadingAction'
 import PdContentEdit from '@/components/app/publish-dialog/PdContentEdit'
+import LocationPicker from '@/components/LocationPicker'
 
 export default {
   name: 'PublishDialog',
   components: {
+    LocationPicker,
     PdContentEdit,
     LoadingAction,
     PdImagesSelect,
@@ -128,6 +134,7 @@ export default {
       content: '',
       images: [],
       layout: LAYOUT_NINE_GRID,
+      loc: null,
     },
     previewLayout: false,
 
@@ -223,6 +230,23 @@ export default {
       const fd = new FormData()
       fd.append('content', form.content)
       fd.append('layout', form.layout)
+      const l = form.loc
+      if (l) {
+        const locData = {
+          province: l.loc.province,
+          city: l.loc.city,
+          district: l.loc.district,
+          address: l.address,
+          name: l.name,
+          lng: l.location.lng,
+          lat: l.location.lat,
+          origin_lng: l.loc.lng,
+          origin_lat: l.loc.lat,
+        }
+        Object.keys(locData).forEach((k) => {
+          fd.append(`location[${k}]`, locData[k])
+        })
+      }
 
       // FormData 的值，只能是 string 或者 Blob
       // 所以 images 对象数组，使用这种方式
