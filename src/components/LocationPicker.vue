@@ -90,6 +90,7 @@ export default {
     loc: null,
     loading: false,
     theEnd: false,
+    idSet: new Set(),
   }),
   computed: {
     ...mapState({
@@ -161,12 +162,19 @@ export default {
       this.loading = false
 
       const l = searchRes.poiList
-      this.page = l.pageIndex
-      this.data.push(...l.pois)
 
       if (l.pois.length < PAGE_SIZE) {
         this.theEnd = true
       }
+
+      this.page = l.pageIndex
+
+      l.pois.forEach((p) => {
+        if (!this.idSet.has(p.id)) {
+          this.data.push(p)
+          this.idSet.add(p.id)
+        }
+      })
     },
     getCurrentPosition() {
       return new Promise((resolve, reject) => {
