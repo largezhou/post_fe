@@ -292,6 +292,6 @@ export default {
 }
 
 .post-card {
-  background: rgba(255, 255, 255, 0.80);
+  background: rgba(255, 255, 255, 0.50);
 }
 </style>

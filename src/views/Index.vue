@@ -60,6 +60,7 @@ export default {
 }
 
 .index-main {
+  background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
