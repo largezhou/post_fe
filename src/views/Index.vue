@@ -63,15 +63,19 @@ export default {
     },
   },
   watch: {
-    bgStyleEl(newVal) {
-      // 先移除原来的
-      const t = document.querySelector(`#${STYLE_EL_ID}`)
-      if (t) {
-        t.parentElement.removeChild(t)
-      }
-      if (newVal) {
-        this.$refs.main.$el.insertAdjacentHTML('beforebegin', newVal)
-      }
+    bgStyleEl: {
+      async handler(newVal) {
+        // 先移除原来的
+        const t = document.querySelector(`#${STYLE_EL_ID}`)
+        if (t) {
+          t.parentElement.removeChild(t)
+        }
+        if (newVal) {
+          await this.$nextTick()
+          this.$refs.main.$el.insertAdjacentHTML('beforebegin', newVal)
+        }
+      },
+      immediate: true,
     },
   },
 }
