@@ -1,7 +1,7 @@
 <template>
   <v-content
+    ref="main"
     class="pahidebanner-0 index-main"
-    :style="mainStyles"
   >
     <v-container
       fluid
@@ -29,25 +29,48 @@ import Posts from '@/components/post/Posts'
 import { getPosts } from '@/api/posts'
 import { mapState } from 'vuex'
 
+const STYLE_EL_ID = 'index-main-bg-style'
+
 export default {
   name: 'Index',
   components: {
     Banner,
     Posts,
   },
+  data: () => ({
+    styleElId: Math.random(),
+  }),
   computed: {
     ...mapState({
       configs: (state) => state.app.configs,
     }),
-    bg() {
-      return this.configs ? this.configs.bg_image : ''
-    },
     getPosts() {
       return getPosts
     },
-    mainStyles() {
-      return {
-        backgroundImage: `url(${this.bg})`,
+    // 黑魔法，，，
+    bgStyleEl() {
+      if (this.configs && this.configs.bg_image) {
+        return `
+<style id="${STYLE_EL_ID}">
+.index-main:before {
+  background-image: url(${this.configs.bg_image});
+}
+</style>
+        `
+      } else {
+        return ''
+      }
+    },
+  },
+  watch: {
+    bgStyleEl(newVal) {
+      // 先移除原来的
+      const t = document.querySelector(`#${STYLE_EL_ID}`)
+      if (t) {
+        t.parentElement.removeChild(t)
+      }
+      if (newVal) {
+        this.$refs.main.$el.insertAdjacentHTML('beforebegin', newVal)
       }
     },
   },
@@ -59,10 +82,15 @@ export default {
   max-width: 600px;
 }
 
-.index-main {
+.index-main:before {
+  content: ' ';
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
   background-size: cover;
 }
 </style>
