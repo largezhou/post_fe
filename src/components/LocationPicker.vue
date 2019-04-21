@@ -227,14 +227,16 @@ export default {
     async dialog(newVal) {
       if (newVal) {
         await this.getList()
-        this.$nextTick(() => {
-          this.loadMoreObserver.observe(this.$refs.loadMore.$el)
-        })
+        await this.$nextTick()
+        this.loadMoreObserver.observe(this.$refs.loadMore.$el)
       } else {
+        this.loadMoreObserver.unobserve(this.$refs.loadMore.$el)
+
         this.page = 1
         this.data = []
         this.loc = null
         this.theEnd = false
+        this.idSet = new Set()
       }
     },
   },
