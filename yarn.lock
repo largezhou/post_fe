@@ -1558,6 +1558,11 @@ bluebird@^3.1.1, bluebird@^3.5.1, bluebird@^3.5.3:
   resolved "http://registry.npm.taobao.org/bluebird/download/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha1-fQHG+WFsmlGrD4xUmnnf5uwz76c=
 
+blueimp-canvas-to-blob@^3.14.0:
+  version "3.14.0"
+  resolved "https://registry.npm.taobao.org/blueimp-canvas-to-blob/download/blueimp-canvas-to-blob-3.14.0.tgz#ea075ffbfb1436607b0c75e951fb1ceb3ca0288e"
+  integrity sha1-6gdf+/sUNmB7DHXpUfsc6zygKI4=
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "http://registry.npm.taobao.org/bn.js/download/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
@@ -2159,6 +2164,14 @@ compression@^1.5.2:
     on-headers "~1.0.2"
     safe-buffer "5.1.2"
     vary "~1.1.2"
+
+compressorjs@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npm.taobao.org/compressorjs/download/compressorjs-1.0.5.tgz#b02735a802177447a7a14d07d63cfff61c7580dd"
+  integrity sha1-sCc1qAIXdEenoU0H1jz/9hx1gN0=
+  dependencies:
+    blueimp-canvas-to-blob "^3.14.0"
+    is-blob "^2.0.1"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -3361,11 +3374,6 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-exif-js@^2.3.0:
-  version "2.3.0"
-  resolved "http://registry.npm.taobao.org/exif-js/download/exif-js-2.3.0.tgz#9d10819bf571f873813e7640241255ab9ce1a814"
-  integrity sha1-nRCBm/Vx+HOBPnZAJBJVq5zhqBQ=
-
 expand-brackets@^2.1.4:
   version "2.1.4"
   resolved "http://registry.npm.taobao.org/expand-brackets/download/expand-brackets-2.1.4.tgz#b77735e315ce30f6b6eff0f83b04151a22449622"
@@ -4474,6 +4482,11 @@ is-binary-path@^1.0.0:
   integrity sha1-dfFmQrSA8YenEcgUFh/TpKdlWJg=
   dependencies:
     binary-extensions "^1.0.0"
+
+is-blob@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/is-blob/download/is-blob-2.0.1.tgz#7fde57ef8782a154bc0f3bdcaa0ffdccb6c33767"
+  integrity sha1-f95X74eCoVS8Dzvcqg/9zLbDN2c=
 
 is-buffer@^1.1.5:
   version "1.1.6"

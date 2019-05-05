@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "compressorjs": "^1.0.5",
     "dayjs": "^1.8.11",
-    "exif-js": "^2.3.0",
     "lodash": "^4.17.11",
     "vee-validate": "^2.2.0",
     "vue": "^2.6.6",

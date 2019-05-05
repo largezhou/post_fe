@@ -251,8 +251,8 @@ export default {
       // FormData 的值，只能是 string 或者 Blob
       // 所以 images 对象数组，使用这种方式
       form.images.forEach((img, i) => {
-        fd.append(`images[${i}]`, img.file)
-        fd.append(`thumbs[${i}]`, img.thumb)
+        fd.append(`images[${i}]`, img.file, img.file.name)
+        fd.append(`thumbs[${i}]`, img.thumb, img.thumb.name)
         fd.append(`naked[${i}]`, img.naked ? 1 : 0)
       })
 

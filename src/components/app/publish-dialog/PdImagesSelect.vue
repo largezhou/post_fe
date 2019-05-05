@@ -83,7 +83,7 @@ export default {
 
       let files = Array.from(e.target.files)
         .slice(0, this.MAX_IMAGES_COUNT - images.length)
-      files = await this.handleRotate(files)
+      files = await this.compressImage(files)
       const thumbs = await this.makeThumb(files)
 
       files.forEach((f, index) => {
@@ -100,12 +100,8 @@ export default {
       this.$emit('input', images)
     },
     // 处理旋转问题
-    handleRotate(files) {
-      if (process.env.VUE_APP_USE_MOCK) {
-        return files
-      } else {
-        return Promise.all(files.map((f) => utils.fixImageOrientation(f)))
-      }
+    compressImage(files) {
+      return Promise.all(files.map((f) => utils.compressImage(f)))
     },
     // 生成缩略图
     makeThumb(files) {
