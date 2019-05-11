@@ -1,5 +1,10 @@
 <template>
-  <span ref="span"/>
+  <span ref="span">
+    <span
+      v-if="share"
+      v-html="htmlContent"
+    />
+  </span>
 </template>
 
 <script>
@@ -10,14 +15,23 @@ export default {
   name: 'PostContent',
   props: {
     content: String,
+    /**
+     * 如果是分享的话，标签不转为 router-link，值转成普通链接，并不能点击
+     */
+    share: Boolean,
   },
   computed: {
     htmlContent() {
-      return this.linkToLink(this.nToBr(this.content))
+      const c = this.linkToLink(this.nToBr(this.content))
+      if (this.share) {
+        return this.doubleSharpToLink(c)
+      } else {
+        return c
+      }
     },
   },
   mounted() {
-    this.doubleSharpToLink(this.htmlContent)
+    !this.share && this.doubleSharpToLink(this.htmlContent)
   },
   methods: {
     nToBr(str) {
@@ -29,8 +43,16 @@ export default {
       })
     },
     doubleSharpToLink(str) {
+      const regExp = /#(\s*[^\s#][^#]*)#/g
+
+      if (this.share) {
+        return str.replace(regExp, (match) => {
+          return `<a href="javascript:void(0)">${match}</a>`
+        })
+      }
+
       const span = this.$refs.span
-      const matches = str.matchAll(/#(\s*[^\s#][^#]*)#/g)
+      const matches = str.matchAll(regExp)
       let lastStrIndex = 0
 
       Array

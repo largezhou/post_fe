@@ -6,7 +6,10 @@
     />
 
     <v-card-text class="post-content">
-      <post-content :content="post.content"/>
+      <post-content
+        :share="share"
+        :content="post.content"
+      />
     </v-card-text>
 
     <v-card-actions>
