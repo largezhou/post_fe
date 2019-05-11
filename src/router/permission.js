@@ -3,6 +3,7 @@ import store from '@/store'
 import { getToken } from '@/libs/token'
 import utils from '@/libs/utils'
 import Vue from 'vue'
+import axios from '@/plugins/axios'
 
 const guestPage = 'index'
 const letUsLogin = () => {
@@ -10,9 +11,34 @@ const letUsLogin = () => {
     store.dispatch('getInfo')
   })
 }
+const shareHostWhiteList = [
+  'page404Everywhere',
+  'page404',
+  'showShare',
+]
 
 router.beforeEach((to, from, next) => {
   const needAuth = utils.needAuth(to)
+  // 如果在分享页，则把 baseUrl 设置为分享api
+  if (to.name === 'showShare') {
+    const baseUrl = process.env.VUE_APP_SHARE_BASE_URL
+    if (!baseUrl) {
+      utils.snackbar('分享没设置好啊')
+      return next(false)
+    }
+    axios.defaults.baseURL = baseUrl
+  }
+
+  log(to.name)
+  // 检查分享
+  if (
+    shareHostWhiteList.indexOf(to.name) === -1 &&
+    location.host === process.env.VUE_APP_SHARE_HOST
+  ) {
+    return next({
+      name: 'page404',
+    })
+  }
 
   // 本地有token，表示已登录
   if (getToken()) {

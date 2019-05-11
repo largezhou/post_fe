@@ -31,9 +31,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-.content {
-  max-width: 600px;
-}
-</style>

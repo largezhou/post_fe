@@ -10,63 +10,18 @@
       ma-0
     >
       <v-flex
-        class="post"
-        ref="postWraps"
+        class="post-wrap"
         px-0
         py-5
         v-for="(p, i) of posts"
         :key="p.id"
         xs12
-        :data-index="i"
       >
-        <v-card class="post-card">
-
-          <post-image
-            ref="postImages"
-            :post="p"
-          />
-
-          <v-card-text class="post-content">
-            <post-content :content="p.content"/>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-card-text class="py-0 px-2">
-              <human-time
-                prefix="发布于 "
-                :time="p.created_at"
-              />
-              <span
-                v-if="p.addr"
-                class="ml-2"
-              >
-                <span>发布于 </span>
-                <v-tooltip top>
-                  <a
-                    :href="'https://www.amap.com/search?query=' + p.addr.full_addr"
-                    target="_blank"
-                    slot="activator"
-                  >{{ p.addr.name }}</a>
-                  <span>{{ p.addr.full_addr }}</span>
-                </v-tooltip>
-              </span>
-            </v-card-text>
-            <v-spacer/>
-            <loading-action
-              v-if="name"
-              icon
-              :action="() => destroyPost(i)"
-            >
-              <mdi-icon
-                icon="delete"
-                class="red--text"
-              />
-            </loading-action>
-            <!--<v-btn icon>
-              <mdi-icon icon="heart-outline"/>
-            </v-btn>-->
-          </v-card-actions>
-        </v-card>
+        <post
+          ref="post"
+          :post="p"
+          :destroy-post="() => destroyPost(i)"
+        />
       </v-flex>
     </v-layout>
 
@@ -86,24 +41,16 @@
 
 <script>
 import { destroyPost } from '@/api/posts'
-import HumanTime from '@/components/HumanTime'
-import PostImage from '@/components/post/PostImage'
 import PreviewDialog from '@/components/post/PreviewDialog'
-import { mapConstants } from '@/libs/constants'
-import { mapState } from 'vuex'
 import PostDeleteConfirmDialog from '@/components/post/PostDeleteConfirmDialog'
-import LoadingAction from '@/components/LoadingAction'
-import PostContent from '@/components/post/PostContent'
+import Post from '@/components/post/Post'
 
 export default {
   name: 'Posts',
   components: {
-    PostContent,
-    LoadingAction,
+    Post,
     PostDeleteConfirmDialog,
     PreviewDialog,
-    PostImage,
-    HumanTime,
   },
   data: () => ({
     posts: [],
@@ -113,16 +60,6 @@ export default {
   }),
   props: {
     getPostsFunction: Function,
-  },
-  computed: {
-    ...mapConstants([
-      'IMAGE_LOAD_STATE_LOADING',
-      'IMAGE_LOAD_STATE_DONE',
-      'IMAGE_LOAD_STATE_ERROR',
-    ]),
-    ...mapState({
-      name: (state) => state.user.name,
-    }),
   },
   async created() {
     this.$bus.$on('new-post', this.onNewPost)
@@ -154,9 +91,7 @@ export default {
         }
 
         const { data: { data, meta } } = await this.getPostsFunction(params)
-        const oldLength = this.posts.length
         this.posts.push(...data)
-        this.initLazyLoad(oldLength)
         this.theEnd = data.length < meta.per_page
       } finally {
         this.loading = false
@@ -164,19 +99,6 @@ export default {
     },
     onNewPost(data) {
       this.posts.unshift(data)
-
-      // 由于加在前面的元素，在 refs 中，也是往后排的
-      // 所以，这里手动把前面的新元素，放到 refs 中的前面
-      // 用来与 posts 中的索引对应
-      this.$nextTick(() => {
-        let t = this.$refs.postImages
-        t = [
-          t[t.length - 1],
-          ...t.slice(0, t.length - 1),
-        ]
-        this.$refs.postImages = t
-        this.lazyLoadObserver.observe(this.$refs.postWraps[t.length - 1])
-      })
     },
     onLoadMore() {
       const lastId = this.posts.length > 0
@@ -193,42 +115,6 @@ export default {
             this.loadMoreObserver.unobserve(this.$refs.loadMore)
           }
         })
-      })
-
-      this.lazyLoadObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const index = entry.target.dataset.index
-          const postImage = this.$refs.postImages[index]
-          if (entry.isIntersecting) {
-            this.loadImages(postImage.images)
-            this.lazyLoadObserver.unobserve(entry.target)
-          }
-        })
-      })
-    },
-    initLazyLoad(oldPostLength) {
-      this.$nextTick(() => {
-        const postWraps = this.$refs.postWraps || []
-        postWraps
-          .slice(oldPostLength)
-          .forEach((el) => {
-            this.lazyLoadObserver.observe(el)
-          })
-      })
-    },
-    loadImages(images) {
-      images.map((img) => {
-        this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_LOADING)
-
-        const el = new Image()
-        el.src = img.thumb
-        el.onload = () => {
-          this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_DONE)
-        }
-        el.onerror = () => {
-          this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_ERROR)
-          log('图片没了')
-        }
       })
     },
     async onReloadPosts() {
@@ -250,13 +136,14 @@ export default {
         this.destroyResolve = resolve
         this.$bus.$emit('post-delete')
       })
-        .then(async(confirmed) => {
+        .then(async (confirmed) => {
           if (confirmed) {
             try {
               await destroyPost(this.posts[index].id)
               this.posts.splice(index, 1)
               this.$snackbar('删掉了')
-            } catch (e) {}
+            } catch (e) {
+            }
           }
         })
     },
@@ -280,18 +167,7 @@ export default {
   color: #BDBDBD;
 }
 
-.post {
+.post-wrap {
   overflow: hidden;
-}
-
-.post-content {
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 40px;
-  word-break: break-all;
-}
-
-.post-card {
-  background: rgba(255, 255, 255, 0.50);
 }
 </style>

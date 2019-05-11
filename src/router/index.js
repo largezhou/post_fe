@@ -4,21 +4,6 @@ import Index from '@/views/Index'
 
 Vue.use(Router)
 
-const indexPage = {
-  path: '/',
-  name: 'index',
-  meta: {
-    keepAlive: true,
-  },
-  component: Index,
-}
-
-const notFoundPage = {
-  path: '*',
-  name: 'page404',
-  component: () => import(/* webpackChunkName: "not-found" */ '@/views/errors/NotFound'),
-}
-
 // 登录
 const login = {
   path: '/login',
@@ -39,6 +24,14 @@ const loginEverywhere = {
  * @type {*[]}
  */
 const routes = [
+  {
+    path: '/',
+    name: 'index',
+    meta: {
+      keepAlive: true,
+    },
+    component: Index,
+  },
   {
     path: '/about',
     name: 'about',
@@ -71,7 +64,6 @@ export default new Router({
     return savedPosition || { x: 0, y: 0 }
   },
   routes: [
-    indexPage,
     {
       path: '',
       component: () => import(/* webpackChunkName: "layout" */ '@/components/Layout'),
@@ -79,8 +71,22 @@ export default new Router({
         login,
         ...routes,
         loginEverywhere,
-        notFoundPage,
       ],
+    },
+    {
+      path: '/404',
+      name: 'page404',
+      component: () => import(/* webpackChunkName: "not-found" */ '@/views/errors/NotFound'),
+    },
+    {
+      path: '/:shareKey',
+      name: 'showShare',
+      component: () => import(/* webpackChunkName: "login" */ '@/views/ShowShare'),
+    },
+    {
+      path: '*',
+      name: 'page404Everywhere',
+      component: () => import(/* webpackChunkName: "not-found" */ '@/views/errors/NotFound'),
     },
   ],
 })

@@ -9,10 +9,6 @@
 
 <script>
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import 'dayjs/locale/zh-cn'
-
-dayjs.extend(relativeTime)
 
 export default {
   name: 'HumanTime',
@@ -28,7 +24,7 @@ export default {
   },
   computed: {
     human() {
-      return dayjs(this.time).locale('zh-cn').fromNow()
+      return dayjs(this.time).fromNow()
     },
   },
 }

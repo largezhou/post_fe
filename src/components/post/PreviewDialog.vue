@@ -21,6 +21,7 @@
           @click.self="onClickOtherArea"
         >
           <a
+            class="h100"
             :href="img.src"
             target="_blank"
           >

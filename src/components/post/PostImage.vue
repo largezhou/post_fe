@@ -88,6 +88,22 @@ export default {
     images() {
       return this.post.images
     },
+    hasImage() {
+      return this.images.length > 0
+    },
+  },
+  created() {
+    this.lazyLoadObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          this.loadImages(this.images)
+          this.lazyLoadObserver.unobserve(entry.target)
+        }
+      })
+    })
+  },
+  mounted() {
+    this.hasImage && this.lazyLoadObserver.observe(this.$el)
   },
   methods: {
     isLoading(img) {
@@ -106,6 +122,21 @@ export default {
         default:
           return ''
       }
+    },
+    loadImages(images) {
+      images.map((img) => {
+        this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_LOADING)
+
+        const el = new Image()
+        el.src = img.thumb
+        el.onload = () => {
+          this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_DONE)
+        }
+        el.onerror = () => {
+          this.$set(img, 'loadState', this.IMAGE_LOAD_STATE_ERROR)
+          log('图片没了')
+        }
+      })
     },
   },
 }

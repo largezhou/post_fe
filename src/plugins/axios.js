@@ -38,6 +38,10 @@ _axios.interceptors.response.use(
           store.dispatch('frontendLogout')
           utils.snackbar('登录已失效')
           break
+        case 400:
+          const { msg } = res.data
+          msg && utils.snackbar(msg)
+          break
         default:
           utils.snackbar(`服务器错误 (code: ${res.status})`)
       }

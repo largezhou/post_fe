@@ -11,6 +11,7 @@ import utils from '@/libs/utils'
 import '@/mocks'
 import '@/libs/constants'
 import '@/plugins/vee-validate'
+import '@/plugins/dayjs'
 
 Vue.config.productionTip = false
 
