@@ -85,6 +85,8 @@ import { mapState } from 'vuex'
 import { storeShare } from '@/api/shares'
 import ShareDialog from '@/components/app/ShareDialog'
 import SharedMsg from '@/components/app/SharedMsg'
+import PostDeleteConfirmDialog from '@/components/post/PostDeleteConfirmDialog'
+import { destroyPost } from '@/api/posts'
 
 export default {
   name: 'Post',
@@ -97,7 +99,6 @@ export default {
   props: {
     post: Object,
     share: Boolean,
-    destroyPost: Function,
   },
   computed: {
     ...mapState({
@@ -131,6 +132,24 @@ export default {
         this.$snackbar(vm, {
           multiLine: true,
         })
+      } catch (e) {
+      }
+    },
+    async destroyPost() {
+      try {
+        await (() => new Promise((resolve, reject) => {
+          const vm = new PostDeleteConfirmDialog({
+            propsData: {
+              resolve,
+              reject,
+            },
+          })
+          document.body.appendChild(vm.$mount().$el)
+        }))()
+
+        await destroyPost(this.post.id)
+        this.$snackbar('删掉了')
+        this.$emit('post-destroyed')
       } catch (e) {
       }
     },

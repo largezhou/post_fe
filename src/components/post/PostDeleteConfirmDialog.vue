@@ -17,7 +17,7 @@
         <v-btn
           color="red"
           flat="flat"
-          @click="onConfirm"
+          @click="onOk"
         >删掉</v-btn>
       </v-card-actions>
     </v-card>
@@ -25,32 +25,11 @@
 </template>
 
 <script>
-export default {
+import Vue from 'vue'
+import DynamicDialog from '@/mixins/DynamicDialog'
+
+export default Vue.extend({
   name: 'PostDeleteConfirmDialog',
-  data: () => ({
-    dialog: false,
-  }),
-  created() {
-    this.$bus.$on('post-delete', this.onPostDelete)
-  },
-  beforeDestroy() {
-    this.$bus.$off('post-delete', this.onPostDelete)
-  },
-  methods: {
-    onPostDelete() {
-      this.dialog = true
-    },
-    onConfirm() {
-      this.$emit('confirmed')
-      this.dialog = false
-    },
-  },
-  watch: {
-    dialog(newVal) {
-      if (!newVal) {
-        this.$emit('closed')
-      }
-    },
-  },
-}
+  mixins: [DynamicDialog],
+})
 </script>

@@ -56,37 +56,19 @@
 
 <script>
 import Vue from 'vue'
+import DynamicDialog from '@/mixins/DynamicDialog'
 
 export default Vue.extend({
   name: 'ShareDialog',
+  mixins: [DynamicDialog],
   data: () => ({
-    dialog: false,
     expired_in: 1,
     options: [1, 7],
   }),
-  props: {
-    resolve: Function,
-    reject: Function,
-  },
-  mounted() {
-    this.dialog = true
-  },
   methods: {
     onOk() {
       this.resolve(this.expired_in)
       this.dialog = false
-    },
-  },
-  watch: {
-    dialog(newVal) {
-      if (!newVal) {
-        this.reject()
-        // 延迟删除元素，等待弹框消失动画
-        setTimeout(() => {
-          this.$destroy()
-          this.$el.parentElement.removeChild(this.$el)
-        }, 1000)
-      }
     },
   },
 })

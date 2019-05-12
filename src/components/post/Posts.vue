@@ -20,7 +20,7 @@
         <post
           ref="post"
           :post="p"
-          :destroy-post="() => destroyPost(i)"
+          @post-destroyed="() => onPostDestroyed(i)"
         />
       </v-flex>
     </v-layout>
@@ -31,25 +31,17 @@
     </div>
 
     <preview-dialog/>
-
-    <post-delete-confirm-dialog
-      @confirmed="onDeleteConfirmed"
-      @closed="onDeleteCanceled"
-    />
   </v-container>
 </template>
 
 <script>
-import { destroyPost } from '@/api/posts'
 import PreviewDialog from '@/components/post/PreviewDialog'
-import PostDeleteConfirmDialog from '@/components/post/PostDeleteConfirmDialog'
 import Post from '@/components/post/Post'
 
 export default {
   name: 'Posts',
   components: {
     Post,
-    PostDeleteConfirmDialog,
     PreviewDialog,
   },
   data: () => ({
@@ -131,27 +123,8 @@ export default {
         this.loadMoreObserver.observe(this.$refs.loadMore)
       })
     },
-    destroyPost(index) {
-      return new Promise((resolve) => {
-        this.destroyResolve = resolve
-        this.$bus.$emit('post-delete')
-      })
-        .then(async (confirmed) => {
-          if (confirmed) {
-            try {
-              await destroyPost(this.posts[index].id)
-              this.posts.splice(index, 1)
-              this.$snackbar('删掉了')
-            } catch (e) {
-            }
-          }
-        })
-    },
-    onDeleteConfirmed() {
-      this.destroyResolve(true)
-    },
-    onDeleteCanceled() {
-      this.destroyResolve(false)
+    onPostDestroyed(index) {
+      this.posts.splice(index, 1)
     },
   },
 }
