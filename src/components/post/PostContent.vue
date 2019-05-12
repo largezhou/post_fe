@@ -52,15 +52,14 @@ export default {
       }
 
       const span = this.$refs.span
-      const matches = str.matchAll(regExp)
+      const matches = str.match(regExp) || []
       let lastStrIndex = 0
 
-      Array
-        .from(matches)
+      matches
         .forEach((m) => {
-          const match = m[0]
-          const p1 = m[1]
-          const index = m['index']
+          const match = m
+          const tagName = m.slice(1, -1).trim()
+          const index = str.indexOf(m, lastStrIndex)
 
           const text = str.slice(lastStrIndex, index)
           if (text) {
@@ -70,7 +69,7 @@ export default {
             router,
             render: (h) => h('router-link', {
               props: {
-                to: `/tags/${p1.trim()}/posts`,
+                to: `/tags/${tagName}/posts`,
               },
             }, match),
           })
