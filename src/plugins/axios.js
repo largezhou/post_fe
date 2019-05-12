@@ -39,7 +39,7 @@ _axios.interceptors.response.use(
           utils.snackbar('登录已失效')
           break
         case 400:
-          const { msg } = res.data
+          const { message: msg } = res.data
           msg && utils.snackbar(msg)
           break
         default:
