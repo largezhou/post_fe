@@ -3,8 +3,14 @@ export default {
     dialog: false,
   }),
   props: {
-    resolve: Function,
-    reject: Function,
+    resolve: {
+      type: Function,
+      default: () => () => {},
+    },
+    reject: {
+      type: Function,
+      default: () => () => {},
+    },
   },
   mounted() {
     this.dialog = true

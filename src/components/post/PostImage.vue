@@ -66,6 +66,7 @@
 
 <script>
 import { mapConstants } from '@/libs/constants'
+import PreviewDialog from '@/components/post/PreviewDialog'
 
 export default {
   name: 'PostImage',
@@ -110,7 +111,13 @@ export default {
       return img.loadState === this.IMAGE_LOAD_STATE_LOADING
     },
     onPreviewImage(index) {
-      this.$bus.$emit('preview-image', this.images, index)
+      const vm = new PreviewDialog({
+        propsData: {
+          cur: index,
+          images: this.images,
+        },
+      })
+      document.body.appendChild(vm.$mount().$el)
     },
     src(img) {
       switch (img.loadState) {

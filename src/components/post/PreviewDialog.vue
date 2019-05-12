@@ -45,27 +45,17 @@
 </template>
 
 <script>
-export default {
+import Vue from 'vue'
+import DynamicDialog from '@/mixins/DynamicDialog'
+
+export default Vue.extend({
   name: 'PreviewDialog',
-  data: () => ({
-    dialog: false,
-    images: [],
-    cur: 0,
-  }),
-  created() {
-    this.$bus.$on('preview-image', this.onPreviewImage)
-  },
-  beforeDestroy() {
-    this.$bus.$off('preview-image', this.onPreviewImage)
+  mixins: [DynamicDialog],
+  props: {
+    images: Array,
+    cur: Number,
   },
   methods: {
-    onPreviewImage(images, cur) {
-      this.images = images
-      this.cur = cur
-
-      this.dialog = true
-    },
-
     /**
      * 点击轮播图其他空白区域，关闭弹窗
      * @param e
@@ -82,15 +72,7 @@ export default {
       t && t[index].click()
     },
   },
-  watch: {
-    dialog(newVal) {
-      if (!newVal) {
-        this.images = []
-        this.cur = 0
-      }
-    },
-  },
-}
+})
 </script>
 
 <style scoped lang="scss">

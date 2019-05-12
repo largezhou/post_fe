@@ -29,20 +29,16 @@
       <span v-show="loading">来咯...</span>
       <span v-show="theEnd">没有了...</span>
     </div>
-
-    <preview-dialog/>
   </v-container>
 </template>
 
 <script>
-import PreviewDialog from '@/components/post/PreviewDialog'
 import Post from '@/components/post/Post'
 
 export default {
   name: 'Posts',
   components: {
     Post,
-    PreviewDialog,
   },
   data: () => ({
     posts: [],
