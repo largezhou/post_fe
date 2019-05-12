@@ -6,7 +6,7 @@ const utils = {}
 
 export default utils
 
-utils.snackbar = (msg) => {
+utils.snackbar = (msg, props = {}) => {
   return new Promise((resolve) => {
     const callback = () => {
       resolve()
@@ -16,6 +16,7 @@ utils.snackbar = (msg) => {
       propsData: {
         callback,
         text: msg,
+        ...props,
       },
       store,
     })

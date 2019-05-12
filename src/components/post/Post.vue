@@ -84,8 +84,7 @@ import HumanTime from '@/components/HumanTime'
 import { mapState } from 'vuex'
 import { storeShare } from '@/api/shares'
 import ShareDialog from '@/components/app/ShareDialog'
-
-import Vue from 'vue'
+import SharedMsg from '@/components/app/SharedMsg'
 
 export default {
   name: 'Post',
@@ -123,7 +122,15 @@ export default {
           post_id: this.post.id,
           expired_in: expiredIn,
         })
-        this.$snackbar(data.url)
+
+        const vm = new SharedMsg({
+          propsData: {
+            url: data.url,
+          },
+        })
+        this.$snackbar(vm, {
+          multiLine: true,
+        })
       } catch (e) {
       }
     },

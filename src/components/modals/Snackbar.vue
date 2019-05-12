@@ -2,8 +2,16 @@
   <v-snackbar
     v-model="shown"
     :top="widescreen"
+    v-bind="$props"
   >
-    {{ text }}
+    <div
+      v-if="isStringMsg"
+      v-html="text"
+    />
+    <div
+      v-else
+      ref="renderNode"
+    />
     <v-btn
       color="pink"
       flat
@@ -16,10 +24,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import { VSnackbar } from 'vuetify/lib'
+
 import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Snackbar',
+  extends: VSnackbar,
   data() {
     return {
       shown: false,
@@ -27,18 +38,34 @@ export default Vue.extend({
   },
   props: {
     text: {
-      type: String,
+      type: [String, Object],
       required: true,
     },
     callback: Function,
   },
   mounted() {
+    window.t = this
     this.shown = true
+    this.handleRenderContent()
   },
   computed: {
     ...mapState({
       widescreen: (state) => state.app.widescreen,
     }),
+    isStringMsg() {
+      return typeof this.text === 'string'
+    },
+  },
+  methods: {
+    handleRenderContent() {
+      if (this.isStringMsg) {
+        return
+      }
+
+      this.$nextTick(() => {
+        this.$refs.renderNode.appendChild(this.text.$mount().$el)
+      })
+    },
   },
   watch: {
     shown(newValue) {
