@@ -1,6 +1,6 @@
 <template>
   <v-snackbar
-    v-model="shown"
+    v-model="dialog"
     :top="widescreen"
     v-bind="$props"
   >
@@ -15,7 +15,7 @@
     <v-btn
       color="pink"
       flat
-      @click="shown = false"
+      @click="dialog = false"
     >
       <mdi-icon icon="close"/>
     </v-btn>
@@ -25,27 +25,21 @@
 <script>
 import { mapState } from 'vuex'
 import { VSnackbar } from 'vuetify/lib'
+import DynamicDialog from '@/mixins/DynamicDialog'
 
 import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Snackbar',
   extends: VSnackbar,
-  data() {
-    return {
-      shown: false,
-    }
-  },
+  mixins: [DynamicDialog],
   props: {
     text: {
       type: [String, Object],
       required: true,
     },
-    callback: Function,
   },
   mounted() {
-    window.t = this
-    this.shown = true
     this.handleRenderContent()
   },
   computed: {
@@ -65,19 +59,6 @@ export default Vue.extend({
       this.$nextTick(() => {
         this.$refs.renderNode.appendChild(this.text.$mount().$el)
       })
-    },
-  },
-  watch: {
-    shown(newValue) {
-      if (!newValue) {
-        if (typeof this.callback === 'function') {
-          this.callback()
-        }
-
-        this.$nextTick(() => {
-          this.$destroy()
-        })
-      }
     },
   },
 })

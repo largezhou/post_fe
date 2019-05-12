@@ -8,19 +8,15 @@ export default utils
 
 utils.snackbar = (msg, props = {}) => {
   return new Promise((resolve) => {
-    const callback = () => {
-      resolve()
-    }
-
     const ins = new Snackbar({
       propsData: {
-        callback,
+        resolve,
+        cancelAction: 'resolve',
         text: msg,
         ...props,
       },
       store,
     })
-
     document.body.appendChild(ins.$mount().$el)
   })
 }

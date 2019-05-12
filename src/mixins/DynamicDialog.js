@@ -11,6 +11,10 @@ export default {
       type: Function,
       default: () => () => {},
     },
+    cancelAction: {
+      type: String,
+      default: 'reject',
+    },
   },
   mounted() {
     this.dialog = true
@@ -24,11 +28,22 @@ export default {
   watch: {
     dialog(newVal) {
       if (!newVal) {
-        this.reject()
+        switch (this.cancelAction) {
+          case 'resolve':
+            this.resolve()
+            break
+          case 'reject':
+            this.reject()
+            break
+          default:
+          // do nothing
+        }
+
         // 延迟删除元素，等待弹框消失动画
         setTimeout(() => {
           this.$destroy()
-          this.$el.parentElement.removeChild(this.$el)
+          const p = this.$el.parentElement
+          p && p.removeChild(this.$el)
         }, 1000)
       }
     },
