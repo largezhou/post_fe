@@ -150,10 +150,13 @@ utils.getCursorPosition = (el, end) => {
   mirror = document.querySelector('.content-editor-cursor')
 
   // 复制 输入框 的样式
-  Object.assign(
-    mirror.style,
-    document.defaultView.getComputedStyle(el, null),
-  )
+  // 本来是用 Object.assign 的，突然就不行了
+  const target = mirror.style
+  const source = window.getComputedStyle(el, null)
+  for (let i of Object.keys(target)) {
+    target[i] = source[i]
+  }
+
   // 同步滚动条
   mirror.scrollTop = el.scrollTop
   // 通过镜像元素中的假光标占位元素获取像素位置
