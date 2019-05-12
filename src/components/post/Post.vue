@@ -37,7 +37,7 @@
       <loading-action
         v-if="name && !share"
         icon
-        :action="storeShare"
+        :action="onShare"
       >
         <mdi-icon
           icon="share"
@@ -83,6 +83,9 @@ import PostImage from '@/components/post/PostImage'
 import HumanTime from '@/components/HumanTime'
 import { mapState } from 'vuex'
 import { storeShare } from '@/api/shares'
+import ShareDialog from '@/components/app/ShareDialog'
+
+import Vue from 'vue'
 
 export default {
   name: 'Post',
@@ -103,11 +106,22 @@ export default {
     }),
   },
   methods: {
-    async storeShare() {
+    async onShare() {
       try {
+        const expiredIn = await (() => new Promise((resolve, reject) => {
+          const vm = new ShareDialog({
+            propsData: {
+              postId: this.post.id,
+              resolve,
+              reject,
+            },
+          })
+          document.body.appendChild(vm.$mount().$el)
+        }))()
+
         const { data } = await storeShare({
           post_id: this.post.id,
-          expired_in: 1,
+          expired_in: expiredIn,
         })
         this.$snackbar(data.url)
       } catch (e) {
