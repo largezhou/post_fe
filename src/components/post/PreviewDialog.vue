@@ -20,13 +20,12 @@
           class="align-center justify-center h100"
           @click.self="onClickOtherArea"
         >
+          <img :src="img.src" @click="openImgLink(i)"/>
           <a
-            class="h100"
+            ref="imgLinks"
             :href="img.src"
             target="_blank"
-          >
-            <img :src="img.src"/>
-          </a>
+          />
         </v-layout>
       </v-carousel-item>
     </v-carousel>
@@ -73,6 +72,14 @@ export default {
      */
     onClickOtherArea(e) {
       this.dialog = false
+    },
+    /**
+     * 图片用 a 标签包住的话，样式不好调，暂时用这种方式，打开图片链接
+     * @param index
+     */
+    openImgLink(index) {
+      const t = this.$refs.imgLinks
+      t && t[index].click()
     },
   },
   watch: {
