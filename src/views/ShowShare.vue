@@ -32,8 +32,6 @@
         </v-tooltip>
       </v-flex>
     </v-layout>
-
-    <preview-dialog/>
   </v-app>
 </template>
 
@@ -41,14 +39,12 @@
 import { getShare } from '@/api/shares'
 import Post from '@/components/post/Post'
 import dayjs from 'dayjs'
-import PreviewDialog from '@/components/post/PreviewDialog'
 import SetBackgroundImage from '@/mixins/SetBackgroundImage'
 
 export default {
   name: 'ShowShare',
   components: {
     Post,
-    PreviewDialog,
   },
   mixins: [
     SetBackgroundImage,
