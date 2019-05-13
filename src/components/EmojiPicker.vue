@@ -44,15 +44,15 @@
         >
           <v-tabs-slider color="blue darken-2"/>
           <v-tab
-            v-for="cat of emojiCats"
-            :key="cat"
+            v-for="(cat, index) of catKeys"
+            :key="index"
           >
-            {{ EMOJI_CAT_MAP[cat] }}
+            {{ emojiCats[cat] }}
           </v-tab>
         </v-tabs>
         <div class="tabs-items">
           <div
-            v-for="cat of emojiCats"
+            v-for="cat of catKeys"
             :key="cat"
           >
             <v-card
@@ -62,8 +62,8 @@
             >
               <div
                 class="pa-1"
-                v-for="emoji of emojisByCat(emojiCats[curTab])"
-                :key="emoji"
+                v-for="(emoji, index) of emojisByCat(cat)"
+                :key="index"
                 @click="onPick(emoji)"
               >{{ emoji }}
               </div>
@@ -76,35 +76,26 @@
 </template>
 
 <script>
-import { mapConstants } from '@/libs/constants'
-import { getEmojis } from '@/api/emojis'
+import { getEmojiCats, getEmojis } from '@/api/emojis'
 
 export default {
   name: 'EmojiPicker',
   data: () => ({
     // 为 true 表示已经显示过一次了，
-    // 因为隐藏时，如果渲染了所有 tags ，滚动会有问题
-    firstShow: false,
     dialog: false,
     // 是否选择后不关闭弹框
     lock: true,
-    curTab: 0,
+    curTab: -1,
     // 按分类存储 emoji
     catEmojis: {},
+    emojiCats: [],
   }),
   computed: {
-    ...mapConstants([
-      'EMOJI_CAT_MAP',
-    ]),
-    emojiCats() {
-      if (this.firstShow) {
-        return Object.keys(this.EMOJI_CAT_MAP)
-      } else {
-        return []
-      }
-    },
     curCat() {
-      return this.emojiCats[this.curTab]
+      return this.catKeys[this.curTab]
+    },
+    catKeys() {
+      return Object.keys(this.emojiCats)
     },
   },
   methods: {
@@ -113,7 +104,8 @@ export default {
         try {
           const { data } = await getEmojis(cat)
           this.$set(this.catEmojis, cat, data)
-        } catch (e) {}
+        } catch (e) {
+        }
       }
     },
     emojisByCat(cat) {
@@ -125,29 +117,48 @@ export default {
         this.dialog = false
       }
     },
-    async forceReloadEmojis(cat) {
-      try {
-        const { data } = await getEmojis(cat, {
-          headers: {
-            'Cache-Control': 'no-cache',
-          },
-        })
-        this.$set(this.catEmojis, cat, data)
-      } catch (e) {}
+    async getCatsIfEmpty() {
+      if (this.emojiCats.length !== 0) {
+        return
+      }
+      const { data } = await getEmojiCats()
+      this.emojiCats = data
+      this.curTab = 0
     },
-    forceReload() {
-      this.forceReloadEmojis(this.curCat)
+    async forceReload() {
+      const config = {
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      }
+
+      const oldCatsCount = this.catKeys.length
+      const { data } = await getEmojiCats(config)
+      this.emojiCats = data
+
+      if (oldCatsCount !== this.catKeys.length) {
+        this.$snackbar('表情分类变了')
+        this.curTab = 0
+      }
+
+      const cat = this.curCat
+      try {
+        const { data } = await getEmojis(cat, config)
+        this.$set(this.catEmojis, cat, data)
+      } catch (e) {
+      }
     },
   },
   watch: {
-    dialog(newVal) {
+    async dialog(newVal) {
       if (newVal) {
-        this.firstShow = true
-        this.getEmojisIfEmpty(this.curCat)
+        this.getCatsIfEmpty()
       }
     },
-    curTab() {
-      this.getEmojisIfEmpty(this.curCat)
+    curTab(newVal) {
+      if (newVal > -1) {
+        this.getEmojisIfEmpty(this.curCat)
+      }
     },
   },
 }

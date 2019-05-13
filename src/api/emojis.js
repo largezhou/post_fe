@@ -10,3 +10,11 @@ export function getEmojis(category, config) {
     ...config,
   })
 }
+
+export function getEmojiCats(config) {
+  return axios({
+    url: 'emoji-cats',
+    method: 'get',
+    ...config,
+  })
+}
